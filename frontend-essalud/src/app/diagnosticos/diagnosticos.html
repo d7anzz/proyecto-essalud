@@ -1,0 +1,150 @@
+<div class="diagnosticos-container">
+
+  <div *ngIf="mensaje" [ngClass]="['alerta-global', tipoMensaje]">
+    <span class="icono-alerta">{{ tipoMensaje === 'exito' ? '✅' : '🚫' }}</span>
+    <p>{{ mensaje }}</p>
+  </div>
+
+  <div *ngIf="pacienteEnConsulta" class="entorno-consulta">
+
+    <div class="paciente-banner">
+      <div class="banner-title">
+        <h2>Registro de Diagnóstico y Receta</h2>
+        <p>Asegúrese de registrar detalladamente el diagnóstico clínico y la dosificación de insumos farmacéuticos.</p>
+      </div>
+      <div class="banner-badges">
+        <span class="badge-atencion"><strong>Paciente:</strong> {{ pacienteEnConsulta.pacienteNombre }}</span>
+        <span class="badge-atencion"><strong>DNI:</strong> {{ pacienteEnConsulta.dniPaciente }}</span>
+      </div>
+    </div>
+
+    <form (ngSubmit)="guardarActoMedico()" class="form-acto-medico">
+
+      <div class="layout-columnas">
+
+        <div class="columna-datos">
+          <div class="card-clinica">
+            <h3>📝 Evaluación y Conclusión Médica</h3>
+
+            <div class="form-group">
+              <label for="diagnostico">Diagnóstico Clínico CIE-10 (Obligatorio):</label>
+              <textarea
+                id="diagnostico"
+                [(ngModel)]="formConsulta.diagnostico"
+                name="diagnostico"
+                required
+                placeholder="Ej. Diagnóstico presuntivo de faringoamigdalitis aguda bacteriana. Presenta hiperemia e infiltrado purulento en amígdalas..."
+                rows="5"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="observaciones">Observaciones / Indicaciones Adicionales:</label>
+              <textarea
+                id="observaciones"
+                [(ngModel)]="formConsulta.observaciones"
+                name="observaciones"
+                placeholder="Ej. Reposo absoluto por 3 días. Consumir abundante líquido. Tomar los medicamentos estrictamente después de consumir alimentos..."
+                rows="5"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="columna-recetario">
+          <div class="card-clinica">
+            <h3>💊 Emisión de Receta Médica Automatizada</h3>
+
+            <div class="mini-buscador-fármacos">
+              <div class="f-group posicion-relativa">
+                <label for="buscarMedInput">Escribir Nombre del Fármaco:</label>
+                <input
+                  id="buscarMedInput"
+                  type="text"
+                  [(ngModel)]="nombreMedicamentoBuscado"
+                  name="txtMedicamento"
+                  (focus)="mostrarDropdown = true"
+                  (blur)="ocultarDropdownConRetraso()"
+                  placeholder="Ej: Paracetamol, Amoxicilina..."
+                  autocomplete="off" />
+
+                <div class="custom-dropdown-farmacia" *ngIf="mostrarDropdown && filtrarMedicamentos().length > 0">
+                  <div
+                    *ngFor="let med of filtrarMedicamentos()"
+                    class="dropdown-item-clinico"
+                    [class.item-agotado]="med.stockActual <= 0"
+                    (mousedown)="seleccionarMedicamentoDropdown(med)">
+
+                    <div class="item-main-row">
+                      <span class="med-name">💊 {{ med.nombreMedicamento }}</span>
+                      <span class="med-stock" [class.no-stock]="med.stockActual <= 0">
+                        Stock: {{ med.stockActual }} u. {{ med.stockActual <= 0 ? '[AGOTADO]' : '' }}
+                      </span>
+                    </div>
+
+                    <div class="item-sub-row">
+                      <span class="med-composition">🧪 Componente: {{ med.composicion || 'No especificada' }}</span>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="f-group width-short">
+                <label>Cantidad:</label>
+                <input
+                  type="number"
+                  [(ngModel)]="cantidadAPrescribir"
+                  name="cantPrescribir"
+                  min="1" />
+              </div>
+
+              <button
+                type="button"
+                (click)="agregarMedicamentoAReceta()"
+                class="btn-agregar-insumo">
+                ➕ Añadir
+              </button>
+            </div>
+
+            <div class="receta-preview-tabla">
+              <table class="tabla-recetario-interna">
+                <thead>
+                  <tr>
+                    <th>Fármaco Prescrito</th>
+                    <th class="text-center">Cantidad</th>
+                    <th class="text-center">Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of formConsulta.medicamentos; let i = index">
+                    <td><strong>{{ item.nombreMedicamento }}</strong></td>
+                    <td class="text-center highlight-qty">{{ item.cantidadRecetada }} u.</td>
+                    <td class="text-center">
+                      <button type="button" (click)="quitarMedicamento(i)" class="btn-quitar-med">🗑️</button>
+                    </td>
+                  </tr>
+                  <tr *ngIf="formConsulta.medicamentos.length === 0">
+                    <td colspan="3" class="no-data-receta">
+                      ⚕️ Ningún medicamento añadido aún. Esta consulta no generará orden de despacho en farmacia.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="bar-acciones-formulario">
+        <button type="button" routerLink="/dashboard/citas" class="btn-cancelar-atencion">
+          ↩️ Cancelar y Volver a Sala de Espera
+        </button>
+        <button type="submit" class="btn-confirmar-acto-medico">
+          💾 Firmar y Concluir Acto Médico
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+</div>

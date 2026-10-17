@@ -1,0 +1,107 @@
+<div class="horario-container">
+
+  <div class="header">
+    <div class="navegador-semana">
+      <button class="btn-nav" (click)="navegarSemana(-1)" title="Semana Anterior">◀</button>
+      <h2>📅 {{ rangoSemanaTexto }}</h2>
+      <button class="btn-nav" (click)="navegarSemana(1)" title="Semana Siguiente">▶</button>
+    </div>
+    <span class="badge-hoy">Hoy: {{ hoyTexto }}</span>
+  </div>
+
+  <div *ngIf="mensaje" [class]="'alerta ' + tipoMensaje">{{ mensaje }}</div>
+
+  <div class="semana-grid">
+    @for (dia of agendaSemanal; track dia.nombre) {
+      <div class="dia-column" [class.dia-pasado]="dia.fechaFormateada < fechaMinimaParaCrear">
+
+        <div class="dia-header">
+          <h4>{{ dia.nombre }}</h4>
+          <span class="dia-fecha-lbl">{{ dia.fechaVisual }}</span>
+        </div>
+
+        <div class="dia-body">
+
+          <button
+            *ngIf="esMedico && dia.fechaFormateada >= fechaMinimaParaCrear"
+            class="btn-agregar-celda"
+            (click)="abrirCrearEnFecha(dia.fechaFormateada)">
+            ＋ Añadir agenda
+          </button>
+
+          @if (dia.horarios.length === 0) {
+            <div
+              class="sin-datos"
+              [class.clickable]="esMedico && dia.fechaFormateada >= fechaMinimaParaCrear"
+              (click)="esMedico && dia.fechaFormateada >= fechaMinimaParaCrear ? abrirCrearEnFecha(dia.fechaFormateada) : null">
+              Sin turnos
+            </div>
+          }
+
+          @for (h of dia.horarios; track h.id) {
+            <div class="turno-card" [class]="h.turno.toLowerCase()" [class.card-historica]="dia.fechaFormateada < fechaLimiteParaModificar">
+              <div class="turno-header-card">
+                <span [class]="'badge ' + h.turno.toLowerCase()">{{ h.turno }}</span>
+
+                <span [class]="h.estado === 'DISPONIBLE' || h.estado === true ? 'estado-activo' : 'estado-inactivo'">
+                  ● {{ h.estado === 'DISPONIBLE' || h.estado === true ? 'Disponible' : 'Ocupado' }}
+                </span>
+              </div>
+
+              <div class="turno-info">
+                <strong>🕒 {{ h.horaInicio }} - {{ h.horaFin }}</strong>
+                <p *ngIf="h.personal">🧑‍⚕️ {{ h.personal.nombre }} {{ h.personal.apellidos }}</p>
+
+                <p *ngIf="h.personal && h.personal.especialidad">
+                  📍 Especialidad: {{ h.personal.especialidad }}
+                </p>
+              </div>
+
+              <div class="turno-actions" *ngIf="esMedico && dia.fechaFormateada >= fechaLimiteParaModificar">
+                <button class="btn-eliminar" (click)="eliminar(h, dia.fechaFormateada)" title="Cancelar Turno">🗑️ Cancelar Turno</button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="mostrarModal && esMedico" (click)="cerrarModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h3>🩺 Programar Agenda por Cupos</h3>
+
+    <p class="info-fecha-modal">📍 Fecha asignada: <strong>{{ form.fecha }}</strong></p>
+
+    <div class="form-grid">
+      <div class="form-group full-width">
+        <label>Turno Institucional</label>
+        <select [(ngModel)]="form.turno" (change)="onTurnoChange()">
+          <option *ngFor="let t of turnosOpciones" [value]="t">{{ t }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Hora Inicio del Turno</label>
+        <input type="time" [(ngModel)]="form.horaInicio" />
+      </div>
+
+      <div class="form-group">
+        <label>Cantidad de Pacientes</label>
+        <input
+          type="number"
+          [(ngModel)]="form.cantidadPacientes"
+          min="1"
+          max="25"
+          class="form-control-cupos"
+          placeholder="Ej: 6" />
+      </div>
+    </div>
+
+    <div class="modal-acciones">
+      <button class="btn-cancelar" (click)="cerrarModal()">Cancelar</button>
+      <button class="btn-primary" (click)="guardar()">Generar Slots de Citas</button>
+    </div>
+  </div>
+</div>

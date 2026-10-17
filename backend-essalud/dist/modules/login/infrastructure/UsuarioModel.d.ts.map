@@ -1,0 +1,1 @@
+{"version":3,"file":"UsuarioModel.d.ts","sourceRoot":"","sources":["../../../../src/modules/login/infrastructure/UsuarioModel.ts"],"names":[],"mappings":"AAEA,qBACa,YAAY;IAErB,GAAG,EAAG,MAAM,CAAC;IAGb,QAAQ,EAAG,MAAM,CAAC;IAGlB,YAAY,EAAG,MAAM,CAAC;IAGtB,KAAK,EAAG,MAAM,CAAC;IAGf,MAAM,EAAG,MAAM,CAAC;IAGhB,gBAAgB,EAAG,MAAM,CAAC;IAG1B,sBAAsB,EAAG,OAAO,CAAC;CACpC"}

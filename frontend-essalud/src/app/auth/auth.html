@@ -1,0 +1,16 @@
+<div class="login-wrapper">
+  <div class="login-card">
+    <h2>EsSalud - Gestión</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="input-group">
+        <label>DNI del Personal</label>
+        <input type="text" formControlName="dni" maxlength="8" placeholder="Ingrese DNI">
+      </div>
+      <div class="input-group">
+        <label>Contraseña</label>
+        <input type="password" formControlName="passwordIn" placeholder="••••••••">
+      </div>
+      <button type="submit" [disabled]="loginForm.invalid">Ingresar al Sistema</button>
+    </form>
+  </div>
+</div>

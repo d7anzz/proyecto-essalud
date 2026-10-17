@@ -1,0 +1,191 @@
+.historias-container {
+  padding: 32px;
+}
+
+h1 {
+  margin-bottom: 8px;
+  color: #0f172a;
+  font-size: 32px;
+}
+
+.descripcion {
+  color: #64748b;
+  margin-bottom: 24px;
+}
+
+.busqueda-card,
+.paciente-card,
+.consulta-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  margin-bottom: 22px;
+}
+
+.busqueda-card label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #0f172a;
+}
+
+.busqueda-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+input {
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  min-width: 260px;
+  font-size: 15px;
+}
+
+button {
+  padding: 12px 18px;
+  border: none;
+  border-radius: 10px;
+  background: #0057b8;
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.btn-secundario {
+  background: #475569;
+}
+
+.estado {
+  padding: 16px;
+  color: #475569;
+}
+
+.estado.pequeño {
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.error {
+  padding: 16px;
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.datos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.datos-grid span,
+.medico-box span,
+.diagnostico-box span {
+  display: block;
+  color: #64748b;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.datos-grid strong {
+  color: #0f172a;
+  font-size: 18px;
+}
+
+.consultas-section h2 {
+  margin: 28px 0 16px;
+  color: #0f172a;
+}
+
+.consulta-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+}
+
+.consulta-header h3 {
+  margin: 0;
+  color: #0f172a;
+}
+
+.consulta-header p {
+  color: #64748b;
+  margin: 4px 0 0;
+}
+
+.fecha {
+  color: #334155;
+  font-weight: 600;
+}
+
+.medico-box,
+.diagnostico-box,
+.medicamentos-box {
+  margin-top: 16px;
+}
+
+.diagnostico-box p {
+  margin: 0;
+  color: #334155;
+  line-height: 1.5;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+th,
+td {
+  padding: 12px;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+  font-size: 14px;
+}
+
+th {
+  background: #f8fafc;
+  color: #334155;
+}
+
+.historia-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.historia-header h1 {
+  margin-bottom: 8px;
+}
+
+.btn-volver {
+  background: #475569;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  white-space: nowrap;
+}
+
+.btn-volver:hover {
+  background: #334155;
+}

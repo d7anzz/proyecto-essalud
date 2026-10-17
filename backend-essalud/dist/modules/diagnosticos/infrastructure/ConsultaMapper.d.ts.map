@@ -1,0 +1,1 @@
+{"version":3,"file":"ConsultaMapper.d.ts","sourceRoot":"","sources":["../../../../src/modules/diagnosticos/infrastructure/ConsultaMapper.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,aAAa,EAAE,MAAM,iBAAiB,CAAC;AAChD,OAAO,EAAE,QAAQ,EAAE,MAAM,oBAAoB,CAAC;AAE9C,qBAAa,cAAc;IACzB,MAAM,CAAC,QAAQ,CAAC,CAAC,EAAE,aAAa,GAAG,QAAQ;CAW5C"}

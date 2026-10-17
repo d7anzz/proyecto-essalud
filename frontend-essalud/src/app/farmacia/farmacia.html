@@ -1,0 +1,203 @@
+<div class="farmacia-container">
+
+  <div class="farmacia-header">
+    <div class="header-info">
+      <h1>Módulo de Gestión de Farmacia</h1>
+      <p>Sistema Centralizado de Despacho e Inventario - EsSalud</p>
+    </div>
+
+    <div class="tab-switcher">
+      <button
+        [class.active]="vistaActual === 'RECETAS'"
+        (click)="cambiarVista('RECETAS')">
+        📋 Bandeja de Recetas
+      </button>
+      <button
+        [class.active]="vistaActual === 'INVENTARIO'"
+        (click)="cambiarVista('INVENTARIO')">
+        📦 Inventario Maestro
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="mensaje" [ngClass]="['alerta-global', tipoMensaje]">
+    <span class="icono-alerta">{{ tipoMensaje === 'exito' ? '✅' : '🚫' }}</span>
+    <p>{{ mensaje }}</p>
+  </div>
+
+  <div *ngIf="vistaActual === 'RECETAS'" class="vista-seccion">
+
+    <div class="tabs-navegacion">
+      <button
+        type="button"
+        (click)="cambiarTabRecetas('pendientes')"
+        [class.active]="tabRecetas === 'pendientes'">
+        ⏳ Órdenes Pendientes
+      </button>
+      <button
+        type="button"
+        (click)="cambiarTabRecetas('entregadas')"
+        [class.active]="tabRecetas === 'entregadas'">
+        ✅ Historial de Entregadas
+      </button>
+    </div>
+
+    <div class="control-bar">
+      <div class="buscador-dni">
+        <input
+          type="text"
+          placeholder="Buscar paciente por DNI..."
+          [(ngModel)]="dniBusqueda"
+          (keyup.enter)="cargarRecetas()"
+          maxLength="8" />
+        <button (click)="cargarRecetas()" class="btn-buscar">🔍 Buscar</button>
+      </div>
+      <button (click)="cargarRecetas()" class="btn-refrescar">🔄 Actualizar Bandeja</button>
+    </div>
+
+    <div *ngIf="cargando" class="loading-state">
+      <div class="spinner"></div>
+      <p>Sincronizando recetas con el servidor...</p>
+    </div>
+
+    <div *ngIf="!cargando" class="table-responsive">
+      <table class="tabla-clinica">
+        <thead>
+          <tr>
+            <th>N° Orden</th>
+            <th>Cita Ref</th>
+            <th>DNI Paciente</th>
+            <th>Medicamento Recetado</th>
+            <th class="text-center">Cantidad Solicitada</th>
+            <th>Estado</th>
+            <th class="text-center">Acción Operativa</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (receta of recetasFiltradas; track receta.idOrden) {
+            <tr class="fila-receta-animada">
+              <td><strong>#{{ receta.idOrden }}</strong></td>
+              <td>Cita #{{ receta.idCita }}</td>
+              <td>👤 {{ receta.dniPaciente }}</td>
+              <td>
+                <div class="fármaco-nombre">{{ receta.nombreMedicamento }}</div>
+              </td>
+              <td class="text-center unidas-badge">{{ receta.cantidadRecetada }} u.</td>
+              <td>
+                <span [ngClass]="['badge', 'status-' + (receta.estadoEntrega || '').toLowerCase()]">
+                  {{ receta.estadoEntrega }}
+                </span>
+              </td>
+              <td class="text-center">
+                @if (tabRecetas === 'pendientes') {
+                  <button (click)="despacharMedicamento(receta)" class="btn-despachar">
+                    💊 Entregar Fármaco
+                  </button>
+                } @else {
+                  <span class="badge-concluido">✓ Despachado</span>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="no-data">
+                📭 No hay recetas médicas {{ tabRecetas === 'pendientes' ? 'pendientes de despacho' : 'entregadas' }} en este momento.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div *ngIf="vistaActual === 'INVENTARIO'" class="vista-seccion">
+    <div class="control-bar j-end">
+      <button (click)="abrirModalAbastecer()" class="btn-primario">
+        ➕ Registrar / Abastecer Medicamento
+      </button>
+    </div>
+
+    <div class="table-responsive">
+      <table class="tabla-clinica">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre Comercial</th>
+            <th>Composición Química</th>
+            <th class="text-center">Stock Actual</th>
+            <th class="text-center">Stock Mínimo</th>
+            <th>Fecha Vencimiento</th>
+            <th>Estado Lote</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (med of inventario; track med.idMedicamento) {
+            <tr [class.row-alerta]="med.stockActual <= med.stockMinimo">
+              <td>#{{ med.idMedicamento }}</td>
+              <td><strong>{{ med.nombreMedicamento }}</strong></td>
+              <td class="text-muted">{{ med.composicion }}</td>
+              <td class="text-center font-bold" [class.text-danger]="med.stockActual <= med.stockMinimo">
+                {{ med.stockActual }}
+              </td>
+              <td class="text-center text-muted">{{ med.stockMinimo }}</td>
+              <td>{{ med.fechaVencimiento }}</td>
+              <td>
+                <span *ngIf="med.stockActual <= med.stockMinimo" class="badge status-alerta">⚠️ Stock Crítico</span>
+                <span *ngIf="med.stockActual > med.stockMinimo" class="badge status-ok">✅ Estable</span>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="no-data">
+                📦 El inventario se encuentra vacío o no se pudo cargar.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div *ngIf="mostrarModalAbastecer" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Ingreso de Lote de Medicamentos</h2>
+        <button (click)="cerrarModal()" class="btn-cerrar-modal">&times;</button>
+      </div>
+
+      <form (ngSubmit)="guardarMedicamento()" class="modal-form">
+        <div class="form-group">
+          <label>Nombre del Medicamento:</label>
+          <input type="text" [(ngModel)]="formMedicamento.nombreMedicamento" name="nombre" required placeholder="Ej. Paracetamol 500mg" />
+        </div>
+
+        <div class="form-group">
+          <label>Composición Química / Descripción:</label>
+          <textarea [(ngModel)]="formMedicamento.composicion" name="composicion" required placeholder="Ej. Cada tableta contiene Paracetamol pura..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Cantidad de Ingreso (Unidades):</label>
+            <input type="number" [(ngModel)]="formMedicamento.cantidadIngreso" name="cantidad" min="1" required />
+          </div>
+          <div class="form-group">
+            <label>Stock de Alerta Mínimo:</label>
+            <input type="number" [(ngModel)]="formMedicamento.stockMinimo" name="minimo" min="0" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Fecha de Vencimiento:</label>
+          <input type="date" [min]="fechaMinimaParaIngreso" [(ngModel)]="formMedicamento.fechaVencimiento" name="vencimiento" required />
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" (click)="cerrarModal()" class="btn-cancelar">Cancelar</button>
+          <button type="submit" class="btn-guardar-lote">📦 Confirmar Ingreso</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>

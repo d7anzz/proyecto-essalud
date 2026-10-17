@@ -1,0 +1,1 @@
+{"version":3,"file":"CitaMapper.d.ts","sourceRoot":"","sources":["../../../../src/modules/citas/infrastructure/CitaMapper.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,aAAa,CAAC;AACxC,OAAO,EAAE,IAAI,EAAE,MAAM,gBAAgB,CAAC;AAEtC,qBAAa,UAAU;IACrB,MAAM,CAAC,QAAQ,CAAC,CAAC,EAAE,SAAS,GAAG,IAAI;IAqCnC,MAAM,CAAC,aAAa,CAAC,CAAC,EAAE,IAAI,GAAG,OAAO,CAAC,SAAS,CAAC;CASlD"}

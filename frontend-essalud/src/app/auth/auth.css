@@ -1,0 +1,8 @@
+.login-wrapper { display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #0056b3 0%, #002d5f 100%); font-family: sans-serif; }
+.login-card { background: white; padding: 2.5rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 380px; }
+h2 { color: #0056b3; text-align: center; margin-bottom: 1.5rem; margin-top: 0; }
+.input-group { margin-bottom: 1.25rem; display: flex; flex-direction: column; }
+label { font-weight: 600; margin-bottom: 0.5rem; color: #333; font-size: 0.9rem; }
+input { padding: 0.65rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
+button { width: 100%; padding: 0.75rem; background: #0056b3; color: white; border: none; border-radius: 4px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 1rem; }
+button:disabled { background: #ced4da; cursor: not-allowed; }

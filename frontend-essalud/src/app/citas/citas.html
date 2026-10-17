@@ -1,0 +1,189 @@
+<div class="citas-container">
+
+  <div class="citas-header">
+    <div class="titulo-seccion">
+      <h2>📋 Control y Monitoreo de Citas Médicas</h2>
+      <p>Ecosistema de Gestión de Consultas de EsSalud</p>
+    </div>
+    <button *ngIf="esAdministrativo || idRolUsuario === 4" class="btn-primary" (click)="abrirModal()">
+      ➕ Agendar Nueva Cita Paciente
+    </button>
+  </div>
+
+  <div *ngIf="mensaje" [class]="'alerta ' + tipoMensaje">{{ mensaje }}</div>
+
+  <div *ngIf="idRolUsuario === 1" class="tabs-navegacion">
+    <button
+      type="button"
+      (click)="cambiarPestana('pendientes')"
+      [class.active]="pestanaActiva === 'pendientes'">
+      📋 Sala de Espera (Pendientes)
+    </button>
+    <button
+      type="button"
+      (click)="cambiarPestana('completadas')"
+      [class.active]="pestanaActiva === 'completadas'">
+      🗂️ Historial de Atenciones (Concluidas)
+    </button>
+  </div>
+
+  <div class="tabla-contenedor">
+    <table class="tabla-citas">
+      <thead>
+        <tr>
+          <th>ID Cita</th>
+          <th>Paciente</th>
+          <th>Médico Asignado</th>
+          <th>Horario de Cita</th>
+          <th>Estado Actual</th>
+          <th>{{ idRolUsuario === 1 ? 'Acción Clínica' : 'Acciones de Control' }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (c of citasFiltradas; track c.idCita) {
+          <tr>
+            <td><strong>#{{ c.idCita }}</strong></td>
+            <td>👤 {{ c.nombrePaciente || c.dniPaciente }}</td>
+            <td>🩺 {{ c.nombreMedico || c.idMedico }}</td>
+            <td>
+              @if (c.infoHorario) {
+                📅 {{ c.infoHorario.fecha }} a las {{ c.infoHorario.horaInicio }} ({{ c.infoHorario.turno }})
+              } @else {
+                ⏱️ Slot ID: {{ c.idHorario }}
+              }
+            </td>
+            <td>
+              <span [class]="'badge-estado ' + (c.estado || '').toLowerCase()">
+                {{ c.estado }}
+              </span>
+            </td>
+            <td>
+              <div class="acciones-celda">
+
+                @if (idRolUsuario === 1) {
+                  @if (c.estado === 'PENDIENTE') {
+                    <button class="btn-accion atender-medico" (click)="atenderCitaEnConsulta(c)" title="Registrar Diagnóstico y Receta">
+                      🩺 Registrar Diagnóstico
+                    </button>
+                  }
+                  @if (c.estado === 'COMPLETADA' || c.estado === 'ATENDIDO') {
+                    <span class="badge-concluido">✅ Atendido con Éxito</span>
+                  }
+                }
+
+                @if (idRolUsuario === 2) {
+                  @if (c.estado === 'PENDIENTE') {
+                    <button class="btn-accion cancelar" (click)="cambiarEstado(c, 'CANCELADA')" title="Cancelar Cita">
+                      ✕ Cancelar
+                    </button>
+                  }
+                  <button class="btn-icon-eliminar" (click)="removerFisicamente(c.idCita)" title="Eliminar Registro">
+                    🗑️
+                  </button>
+                }
+
+                @if (idRolUsuario === 4) {
+                  @if (c.estado === 'PENDIENTE') {
+                    <button class="btn-accion atender-medico" (click)="atenderCitaEnConsulta(c)" title="Diagnosticar">
+                      🩺 Atender
+                    </button>
+                    <button class="btn-accion cancelar" (click)="cambiarEstado(c, 'CANCELADA')" title="Cancelar Cita">
+                      ✕ Cancelar
+                    </button>
+                  }
+                  @if (c.estado === 'COMPLETADA' || c.estado === 'ATENDIDO') {
+                    <span class="badge-concluido">✅ Concluida</span>
+                  }
+                  <button class="btn-icon-eliminar" (click)="removerFisicamente(c.idCita)" title="Eliminar Registro">
+                    🗑️
+                  </button>
+                }
+
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="tabla-vacia">
+              📭 No hay registros disponibles para mostrar en esta sección.
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="mostrarModalAgendar && (esAdministrativo || idRolUsuario === 4)" (click)="cerrarModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h3>📋 Registrar Cita en Agenda</h3>
+
+    <div class="form-container">
+      <div class="form-group posicion-relativa">
+        <label>Buscar Paciente por DNI</label>
+        <input
+          type="text"
+          [value]="pacienteSeleccionadoTexto"
+          (input)="buscarPacientePorDni($event)"
+          placeholder="Escriba el DNI del asegurado..." autocomplete="off" />
+
+        <div class="autocomplete-dropdown" *ngIf="mostrarDropdownPacientes">
+          @for (p of pacientesEncontrados; track p.dni) {
+            <div class="autocomplete-option" (click)="seleccionarPaciente(p)">
+              🪪 <strong>{{ p.dni }}</strong> - {{ p.nombre }} {{ p.apellidos }}
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>1. Especialidad Médica</label>
+        <select [(ngModel)]="form.especialidad" (change)="alCambiarEspecialidad()" [disabled]="!form.dniPaciente">
+          <option value="" disabled selected>-- Seleccione Especialidad --</option>
+          @for (esp of especialidades; track esp) {
+            <option [value]="esp">{{ esp }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>2. Médico Especialista</label>
+        <select [(ngModel)]="form.dniMedico" (change)="alCambiarMedico()" [disabled]="!form.especialidad || medicosFiltrados.length === 0">
+          <option value="" disabled selected>-- Seleccione Médico --</option>
+          @for (m of medicosFiltrados; track m.dni) {
+            <option [value]="m.dni">{{ m.nombre }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>3. Fecha de Consulta</label>
+        <select [(ngModel)]="form.fecha" (change)="alCambiarFecha()" [disabled]="!form.dniMedico || fechasFiltradas.length === 0">
+          <option value="" disabled selected>-- Seleccione una Fecha --</option>
+          @for (fecha of fechasFiltradas; track fecha) {
+            <option [value]="fecha">📅 {{ fecha }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>4. Horas Disponibles</label>
+        <select [(ngModel)]="form.idHorario" [disabled]="!form.fecha || horariosFinales.length === 0">
+          <option value="" disabled selected>-- Seleccione la Hora --</option>
+          @for (h of horariosFinales; track h.id) {
+            <option [value]="h.id">
+              ⏰ {{ h.horaInicio }} (Turno: {{ h.turno }})
+            </option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-acciones">
+      <button class="btn-cancelar" (click)="cerrarModal()">Cerrar</button>
+      <button class="btn-primary" (click)="agendarCita()" [disabled]="!form.idHorario">
+        Confirmar y Ocupar Slot
+      </button>
+    </div>
+  </div>
+</div>

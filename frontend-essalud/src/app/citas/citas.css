@@ -1,0 +1,453 @@
+.citas-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+.citas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 16px;
+}
+
+.titulo-seccion h2 {
+  color: #1e3a8a;
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.titulo-seccion p {
+  margin: 4px 0 0 0;
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.btn-primary {
+  background-color: #1e40af;
+  color: #ffffff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 4px 6px -1px rgba(30, 64, 175, 0.2);
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-primary:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.alerta {
+  padding: 14px 18px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.alerta.exito {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.alerta.error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.tabla-contenedor {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.tabla-citas {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.tabla-citas th {
+  background-color: #0284c7;
+  color: #ffffff;
+  padding: 14px 16px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tabla-citas td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  color: #334155;
+  vertical-align: middle;
+}
+
+.tabla-citas tr:hover {
+  background-color: #f8fafc;
+}
+
+.tabla-vacia {
+  text-align: center;
+  color: #94a3b8;
+  padding: 40px !important;
+  font-style: italic;
+  font-size: 1rem;
+}
+
+.badge-estado {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.badge-estado.pendiente {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.badge-estado.completada {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.badge-estado.cancelada {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.acciones-celda {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-accion {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.btn-accion.completar {
+  background-color: #f0fdf4;
+  color: #16a34a;
+  border-color: #bbf7d0;
+}
+
+.btn-accion.completar:hover {
+  background-color: #16a34a;
+  color: #ffffff;
+  border-color: #16a34a;
+}
+
+.btn-accion.cancelar {
+  background-color: #fff5f5;
+  color: #e11d48;
+  border-color: #fecdd3;
+}
+
+.btn-accion.cancelar:hover {
+  background-color: #e11d48;
+  color: #ffffff;
+  border-color: #e11d48;
+}
+
+.btn-icon-eliminar {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-icon-eliminar:hover {
+  background-color: #f1f5f9;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #ffffff;
+  padding: 28px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.modal h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #1e3a8a;
+  font-size: 1.4rem;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 10px;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group.posicion-relativa {
+  position: relative;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.form-group input, .form-group select {
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #334155;
+  outline: none;
+  background-color: #ffffff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input:focus, .form-group select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-group input:disabled, .form-group select:disabled {
+  background-color: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+  border-color: #e2e8f0;
+}
+
+.autocomplete-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1010;
+}
+
+.autocomplete-option {
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  color: #334155;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.autocomplete-option:hover {
+  background-color: #f1f5f9;
+  color: #1e3a8a;
+}
+
+.autocomplete-option strong {
+  color: #0284c7;
+}
+
+.modal-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 2px solid #f1f5f9;
+  padding-top: 16px;
+}
+
+.btn-cancelar {
+  background-color: #e2e8f0;
+  color: #475569;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-cancelar:hover {
+  background-color: #cbd5e1;
+}
+
+@media (max-width: 768px) {
+  .citas-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .btn-primary {
+    width: 100%;
+  }
+
+  .tabla-contenedor {
+    overflow-x: auto;
+  }
+}
+
+.btn-accion.atender-medico {
+  background-color: #4f46e5;
+  color: white;
+}
+
+.btn-accion.atender-medico:hover {
+  background-color: #4338ca;
+  transform: translateY(-1px);
+}
+/* =================================================================== */
+/* 📑 BARRA DE PESTAÑAS (TABS NAVEGACIÓN)                                */
+/* =================================================================== */
+.tabs-navegacion {
+  display: flex;
+  gap: 8px;
+  margin: 20px 0 16px 0;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 1px;
+}
+
+.tabs-navegacion button {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-bottom: none;
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease-in-out;
+}
+
+.tabs-navegacion button:hover {
+  background: #f1f5f9;
+  color: #0284c7;
+}
+
+/* Estado activo: Resalta con el color azul institucional */
+.tabs-navegacion button.active {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+  box-shadow: 0 -2px 6px rgba(2, 132, 199, 0.15);
+}
+
+/* =================================================================== */
+/* ✅ BADGE DE ATENCIÓN CONCLUIDA (HISTORIAL)                           */
+/* =================================================================== */
+.badge-concluido {
+  background-color: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-block;
+  box-shadow: 0 1px 2px rgba(22, 163, 74, 0.05);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Normalización de badges según el estado en minúsculas */
+.badge-estado.completada,
+.badge-estado.atendido {
+  background-color: #e6fcf5;
+  color: #0ca678;
+}
+
+.badge-estado.pendiente {
+  background-color: #fff9db;
+  color: #f08c00;
+}
+
+.badge-estado.cancelada {
+  background-color: #fff5f5;
+  color: #e03131;
+}
+
+/* =================================================================== */
+/* ⚡ ANIMACIONES Y TABLA VACÍA                                         */
+/* =================================================================== */
+.tabla-vacia {
+  text-align: center;
+  padding: 40px !important;
+  color: #64748b;
+  font-size: 15px;
+  font-weight: 500;
+  background-color: #f8fafc;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

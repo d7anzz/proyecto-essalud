@@ -1,0 +1,432 @@
+<section class="reportes-container">
+  <h1>Reportes del Sistema</h1>
+
+  <p class="descripcion">
+    Resumen general de pacientes, personal, citas, consultas médicas y farmacia.
+  </p>
+
+  <div *ngIf="cargando()" class="estado">
+    Cargando reportes...
+  </div>
+
+  <div *ngIf="error()" class="error">
+    {{ error() }}
+  </div>
+
+  <div *ngIf="resumen() as data" class="grid-reportes">
+
+    <div
+      class="card card-click"
+      [class.card-activa]="reporteActivo === 'pacientes'"
+      (click)="seleccionarReporte('pacientes')"
+    >
+      <span class="titulo">Pacientes registrados</span>
+      <strong>{{ data.totalPacientes }}</strong>
+      <small>Descarga directa</small>
+    </div>
+
+    <div
+      class="card card-click"
+      [class.card-activa]="reporteActivo === 'personal'"
+      (click)="seleccionarReporte('personal')"
+    >
+      <span class="titulo">Personal registrado</span>
+      <strong>{{ data.totalPersonal }}</strong>
+      <small>Área y especialidad</small>
+    </div>
+
+    <div
+      class="card card-click"
+      [class.card-activa]="reporteActivo === 'citas'"
+      (click)="seleccionarReporte('citas')"
+    >
+      <span class="titulo">Citas registradas</span>
+      <strong>
+        {{ data.citasPendientes + data.citasCompletadas + data.citasCanceladas }}
+      </strong>
+      <small>Fecha, especialidad y estado</small>
+    </div>
+
+    <div
+      class="card card-click"
+      [class.card-activa]="reporteActivo === 'consultas'"
+      (click)="seleccionarReporte('consultas')"
+    >
+      <span class="titulo">Consultas médicas</span>
+      <strong>{{ data.totalConsultas }}</strong>
+      <small>Fecha y especialidad</small>
+    </div>
+
+    <div
+      class="card card-click alerta"
+      [class.card-activa]="reporteActivo === 'bajoStock'"
+      (click)="seleccionarReporte('bajoStock')"
+    >
+      <span class="titulo">Medicamentos bajo stock</span>
+      <strong>{{ data.medicamentosBajoStock }}</strong>
+      <small>Descarga directa</small>
+    </div>
+
+    <div
+      class="card card-click alerta"
+      [class.card-activa]="reporteActivo === 'porVencer'"
+      (click)="seleccionarReporte('porVencer')"
+    >
+      <span class="titulo">Medicamentos por vencer</span>
+      <strong>{{ data.medicamentosPorVencer }}</strong>
+      <small>Descarga directa</small>
+    </div>
+
+  </div>
+</section>
+
+<section class="reporte-filtros" *ngIf="reporteActivo === 'pacientes'">
+  <div class="reporte-header">
+    <div>
+      <h2>Reporte de pacientes asegurados</h2>
+      <p>
+        Descarga el listado completo de pacientes registrados en el sistema.
+      </p>
+    </div>
+  </div>
+
+  <div class="acciones-panel">
+    <button type="button" class="btn-principal" (click)="descargarPacientesExcel()">
+      Descargar Excel de pacientes
+    </button>
+  </div>
+</section>
+
+<section class="reporte-filtros" *ngIf="reporteActivo === 'personal'">
+  <div class="reporte-header">
+    <div>
+      <h2>Reporte de personal registrado</h2>
+      <p>
+        Filtra el personal por área o rol. Si seleccionas médicos, también puedes filtrar por especialidad.
+      </p>
+    </div>
+  </div>
+
+  <div class="filtros-card">
+    <div class="campo">
+      <label>Área / Rol</label>
+      <select [(ngModel)]="rolPersonal" (change)="onRolPersonalChange()">
+        <option value="TODOS">Todos</option>
+        <option value="MEDICO">Médico</option>
+        <option value="ADMINISTRATIVO">Administrativo</option>
+        <option value="FARMACIA">Farmacia</option>
+        <option value="JEFE_HOSPITAL">Jefe hospital</option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label>Especialidad médica</label>
+      <select [(ngModel)]="idEspecialidadPersonal" [disabled]="rolPersonal !== 'MEDICO'">
+        <option value="">Todas las especialidades</option>
+        <option value="1">Cardiología</option>
+        <option value="2">Pediatría</option>
+        <option value="3">Medicina General</option>
+        <option value="4">Ginecología</option>
+        <option value="5">Neurología</option>
+      </select>
+    </div>
+
+    <div class="acciones">
+      <button type="button" class="btn-secundario" (click)="buscarPersonal()">
+        Buscar
+      </button>
+
+      <button type="button" class="btn-secundario" (click)="limpiarPersonal()">
+        Limpiar
+      </button>
+
+      <button type="button" class="btn-principal" (click)="descargarPersonalExcel()">
+        Descargar Excel
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="buscoPersonal && personal.length === 0" class="sin-resultados">
+    No se encontraron resultados para el reporte de personal.
+  </div>
+
+  <table *ngIf="personal.length > 0" class="tabla-reportes">
+    <thead>
+      <tr>
+        <th>DNI</th>
+        <th>Nombres</th>
+        <th>Apellidos</th>
+        <th>Área / Rol</th>
+        <th>Colegiatura</th>
+        <th>Especialidad</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let persona of personalPaginado">
+        <td>{{ persona.dni }}</td>
+        <td>{{ persona.nombre }}</td>
+        <td>{{ persona.apellidos }}</td>
+        <td>{{ persona.rol }}</td>
+        <td>{{ persona.colegiatura || 'No aplica' }}</td>
+        <td>{{ persona.especialidad || 'No aplica' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="personal.length > itemsPorPagina" class="paginacion">
+    <button type="button" class="btn-secundario" (click)="paginaAnteriorPersonal()" [disabled]="paginaPersonal === 1">
+      Anterior
+    </button>
+
+    <span>
+      Página {{ paginaPersonal }} de {{ totalPaginasPersonal }}
+    </span>
+
+    <button type="button" class="btn-secundario" (click)="paginaSiguientePersonal()" [disabled]="paginaPersonal === totalPaginasPersonal">
+      Siguiente
+    </button>
+  </div>
+</section>
+
+<section class="reporte-filtros" *ngIf="reporteActivo === 'citas'">
+  <div class="reporte-header">
+    <div>
+      <h2>Reporte de citas médicas</h2>
+      <p>
+        Filtra las citas por rango de fechas, especialidad y estado. La tabla se muestra paginada, pero el Excel descarga todo lo filtrado.
+      </p>
+    </div>
+  </div>
+
+  <div class="filtros-card">
+    <div class="campo">
+      <label>Fecha inicio</label>
+      <input type="date" [(ngModel)]="fechaInicio">
+    </div>
+
+    <div class="campo">
+      <label>Fecha fin</label>
+      <input type="date" [(ngModel)]="fechaFin">
+    </div>
+
+    <div class="campo">
+      <label>Especialidad</label>
+      <select [(ngModel)]="idEspecialidad">
+        <option value="">Todas las especialidades</option>
+        <option value="1">Cardiología</option>
+        <option value="2">Pediatría</option>
+        <option value="3">Medicina General</option>
+        <option value="4">Ginecología</option>
+        <option value="5">Neurología</option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label>Estado de cita</label>
+      <select [(ngModel)]="estadoCita">
+        <option value="TODAS">Todas</option>
+        <option value="PENDIENTE">Pendientes</option>
+        <option value="COMPLETADA">Completadas</option>
+        <option value="CANCELADA">Canceladas</option>
+      </select>
+    </div>
+
+    <div class="acciones">
+      <button type="button" class="btn-secundario" (click)="buscarCitas()">
+        Buscar
+      </button>
+
+      <button type="button" class="btn-secundario" (click)="limpiarCitas()">
+        Limpiar
+      </button>
+
+      <button type="button" class="btn-principal" (click)="descargarExcel()">
+        Descargar Excel
+      </button>
+    </div>
+  </div>
+
+  <div class="ayuda-reporte">
+    <strong>Nota:</strong> La tabla muestra {{ itemsPorPagina }} registros por página. El Excel descarga todos los registros encontrados según los filtros.
+  </div>
+
+  <div *ngIf="buscoCitas && citas.length === 0" class="sin-resultados">
+    No se encontraron citas con los filtros seleccionados.
+  </div>
+
+  <table *ngIf="citas.length > 0" class="tabla-reportes">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>DNI Paciente</th>
+        <th>Paciente</th>
+        <th>Médico</th>
+        <th>Especialidad</th>
+        <th>Fecha</th>
+        <th>Hora inicio</th>
+        <th>Hora fin</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let cita of citasPaginadas">
+        <td>{{ cita.idCita }}</td>
+        <td>{{ cita.dniPaciente }}</td>
+        <td>{{ cita.paciente }}</td>
+        <td>{{ cita.medico }}</td>
+        <td>{{ cita.especialidad || 'Sin especialidad' }}</td>
+        <td>{{ cita.fecha | date:'dd/MM/yyyy' }}</td>
+        <td>{{ cita.horaInicio }}</td>
+        <td>{{ cita.horaFin }}</td>
+        <td>{{ cita.estado }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="citas.length > itemsPorPagina" class="paginacion">
+    <button type="button" class="btn-secundario" (click)="paginaAnteriorCitas()" [disabled]="paginaCitas === 1">
+      Anterior
+    </button>
+
+    <span>
+      Página {{ paginaCitas }} de {{ totalPaginasCitas }}
+    </span>
+
+    <button type="button" class="btn-secundario" (click)="paginaSiguienteCitas()" [disabled]="paginaCitas === totalPaginasCitas">
+      Siguiente
+    </button>
+  </div>
+</section>
+
+<section class="reporte-filtros" *ngIf="reporteActivo === 'consultas'">
+  <div class="reporte-header">
+    <div>
+      <h2>Reporte de consultas médicas</h2>
+      <p>
+        Filtra las consultas por rango de fechas y especialidad médica. La tabla se muestra paginada, pero el Excel descarga todo lo filtrado.
+      </p>
+    </div>
+  </div>
+
+  <div class="filtros-card">
+    <div class="campo">
+      <label>Fecha inicio</label>
+      <input type="date" [(ngModel)]="fechaInicioConsulta">
+    </div>
+
+    <div class="campo">
+      <label>Fecha fin</label>
+      <input type="date" [(ngModel)]="fechaFinConsulta">
+    </div>
+
+    <div class="campo">
+      <label>Especialidad</label>
+      <select [(ngModel)]="idEspecialidadConsulta">
+        <option value="">Todas las especialidades</option>
+        <option value="1">Cardiología</option>
+        <option value="2">Pediatría</option>
+        <option value="3">Medicina General</option>
+        <option value="4">Ginecología</option>
+        <option value="5">Neurología</option>
+      </select>
+    </div>
+
+    <div class="acciones">
+      <button type="button" class="btn-secundario" (click)="buscarConsultas()">
+        Buscar
+      </button>
+
+      <button type="button" class="btn-secundario" (click)="limpiarConsultas()">
+        Limpiar
+      </button>
+
+      <button type="button" class="btn-principal" (click)="descargarConsultasExcel()">
+        Descargar Excel
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="buscoConsultas && consultas.length === 0" class="sin-resultados">
+    No se encontraron consultas médicas con los filtros seleccionados.
+  </div>
+
+  <table *ngIf="consultas.length > 0" class="tabla-reportes">
+    <thead>
+      <tr>
+        <th>ID Consulta</th>
+        <th>ID Cita</th>
+        <th>DNI Paciente</th>
+        <th>Paciente</th>
+        <th>Médico</th>
+        <th>Especialidad</th>
+        <th>Diagnóstico</th>
+        <th>Fecha atención</th>
+        <th>Estado cita</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let consulta of consultasPaginadas">
+        <td>{{ consulta.idConsulta }}</td>
+        <td>{{ consulta.idCita }}</td>
+        <td>{{ consulta.dniPaciente }}</td>
+        <td>{{ consulta.paciente }}</td>
+        <td>{{ consulta.medico }}</td>
+        <td>{{ consulta.especialidad || 'Sin especialidad' }}</td>
+        <td>{{ consulta.diagnostico }}</td>
+        <td>{{ consulta.fechaAtencion | date:'dd/MM/yyyy' }}</td>
+        <td>{{ consulta.estadoCita }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="consultas.length > itemsPorPagina" class="paginacion">
+    <button type="button" class="btn-secundario" (click)="paginaAnteriorConsultas()" [disabled]="paginaConsultas === 1">
+      Anterior
+    </button>
+
+    <span>
+      Página {{ paginaConsultas }} de {{ totalPaginasConsultas }}
+    </span>
+
+    <button type="button" class="btn-secundario" (click)="paginaSiguienteConsultas()" [disabled]="paginaConsultas === totalPaginasConsultas">
+      Siguiente
+    </button>
+  </div>
+</section>
+
+<section class="reporte-filtros" *ngIf="reporteActivo === 'bajoStock'">
+  <div class="reporte-header">
+    <div>
+      <h2>Reporte de medicamentos bajo stock</h2>
+      <p>
+        Descarga los medicamentos cuyo stock actual está por debajo o igual al stock mínimo.
+      </p>
+    </div>
+  </div>
+
+  <div class="acciones-panel">
+    <button type="button" class="btn-principal" (click)="descargarMedicamentosBajoStockExcel()">
+      Descargar Excel de medicamentos bajo stock
+    </button>
+  </div>
+</section>
+
+<section class="reporte-filtros" *ngIf="reporteActivo === 'porVencer'">
+  <div class="reporte-header">
+    <div>
+      <h2>Reporte de medicamentos por vencer</h2>
+      <p>
+        Descarga los medicamentos con fecha de vencimiento dentro de los próximos 90 días.
+      </p>
+    </div>
+  </div>
+
+  <div class="acciones-panel">
+    <button type="button" class="btn-principal" (click)="descargarMedicamentosPorVencerExcel()">
+      Descargar Excel de medicamentos por vencer
+    </button>
+  </div>
+</section>

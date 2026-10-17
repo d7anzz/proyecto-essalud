@@ -1,0 +1,119 @@
+<div class="dashboard-wrapper">
+
+  <header class="topbar">
+    <div class="left-section">
+      <button class="brand-btn" routerLink="/dashboard/inicio" title="Ir al Inicio">
+        <div class="logo-container">
+          <img src="https://play-lh.googleusercontent.com/duhSVSES4CZ2dB95Dmc5heHcnlBwQnN9HPtMnmrd-AwS2izC_ZrFNMiR20uk4D5WJVU"
+               alt="Logo EsSalud"
+               class="essalud-logo-img">
+          <div class="brand-text-group">
+            <span class="brand-main">EsSalud</span>
+            <span class="brand-sub">Módulo de Gestión Integral</span>
+          </div>
+        </div>
+      </button>
+    </div>
+
+    <div class="right-section">
+      <div class="user-profile-container">
+        <button class="profile-trigger" (click)="toggleMenuUsuario()">
+          @if (fotoMedico()) {
+            <img [src]="fotoMedico()" alt="Foto Perfil" class="avatar-img">
+          } @else {
+            <div class="avatar-placeholder">👤</div>
+          }
+          <div class="user-meta">
+            <span class="user-name">{{ nombreUsuario() }}</span>
+            <span class="user-role">{{ nombreRol() }}</span>
+          </div>
+          <span class="arrow-icon">{{ mostrarMenuUsuario() ? '▲' : '▼' }}</span>
+        </button>
+
+        @if (mostrarMenuUsuario()) {
+          <div class="profile-dropdown">
+            <div class="dropdown-header">
+              <strong>{{ nombreUsuario() }}</strong>
+              <span class="role-subtext">{{ nombreRol() }}</span>
+            </div>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" routerLink="/dashboard/perfil">
+              ⚙️ Mi Perfil
+            </button>
+            <button class="dropdown-item logout-item" (click)="logout()">
+              🚪 Cerrar Sesión
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  </header>
+
+  <div class="main-layout">
+
+    <nav class="sidebar">
+      <ul class="nav-links">
+
+        @if (idRol() === 1 || idRol() === 2 || idRol() === 4) {
+          <li>
+            <a routerLink="/dashboard/pacientes" routerLinkActive="active-link">
+              <span class="icon">👥</span>
+              <span class="link-text">Pacientes</span>
+            </a>
+          </li>
+        }
+
+        @if (idRol() === 1 || idRol() === 2 || idRol() === 4) {
+          <li>
+            <a routerLink="/dashboard/citas" routerLinkActive="active-link">
+              <span class="icon">📋</span>
+              <span class="link-text">Citas Médicas</span>
+            </a>
+          </li>
+        }
+
+        @if (idRol() === 3 || idRol() === 4) {
+          <li>
+            <a routerLink="/dashboard/farmacia" routerLinkActive="active-link">
+              <span class="icon">💊</span>
+              <span class="link-text">Farmacia</span>
+            </a>
+          </li>
+        }
+
+        @if (idRol() === 1 || idRol() === 2) {
+          <li>
+            <a routerLink="/dashboard/horarios" routerLinkActive="active-link">
+              <span class="icon">📅</span>
+              <span class="link-text">Mis Horarios</span>
+            </a>
+          </li>
+        }
+
+        @if (idRol() === 2 || idRol() === 4) {
+          <li>
+            <a routerLink="/dashboard/registro" routerLinkActive="active-link">
+              <span class="icon">💼</span>
+              <span class="link-text">Registrar Personal</span>
+            </a>
+          </li>
+        }
+        @if (idRol() === 2 || idRol() === 4) {
+          <li>
+            <a routerLink="/dashboard/reportes" routerLinkActive="active-link">
+              <span class="icon">📊</span>
+              <span class="link-text">Reportes</span>
+            </a>
+          </li>
+        }
+       
+
+      </ul>
+    </nav>
+
+    <main class="content-viewport">
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+</div>

@@ -1,0 +1,160 @@
+<section class="historias-container">
+
+  <div class="historia-header">
+    <div>
+      <h1>Historia Clínica del Paciente</h1>
+
+      @if (vieneDesdePacientes()) {
+        <p class="descripcion">
+          Historial médico del paciente seleccionado desde Control de Pacientes.
+        </p>
+      } @else {
+        <p class="descripcion">
+          Consulte el historial médico de un paciente mediante su DNI.
+        </p>
+      }
+    </div>
+
+    @if (vieneDesdePacientes()) {
+      <button type="button" class="btn-volver" (click)="volverPacientes()">
+        Volver a Pacientes
+      </button>
+    }
+  </div>
+
+  @if (!vieneDesdePacientes()) {
+    <div class="busqueda-card">
+      <label for="dniPaciente">DNI del paciente</label>
+
+      <div class="busqueda-row">
+        <input
+          id="dniPaciente"
+          type="text"
+          maxlength="8"
+          placeholder="Ingrese DNI de 8 dígitos"
+          [ngModel]="dniBusqueda()"
+          (ngModelChange)="dniBusqueda.set($event)"
+        />
+
+        <button type="button" (click)="buscarHistoria()" [disabled]="cargando()">
+          Buscar
+        </button>
+
+        <button type="button" class="btn-secundario" (click)="limpiar()">
+          Limpiar
+        </button>
+      </div>
+    </div>
+  }
+
+  <div *ngIf="cargando()" class="estado">
+    Buscando historia clínica...
+  </div>
+
+  <div *ngIf="error()" class="error">
+    {{ error() }}
+  </div>
+
+  <div *ngIf="historia() as data" class="resultado">
+    <div class="paciente-card">
+      <h2>Datos del Paciente</h2>
+
+      <div class="datos-grid">
+        <div>
+          <span>DNI</span>
+          <strong>{{ data.paciente.dni }}</strong>
+        </div>
+
+        <div>
+          <span>Nombre</span>
+          <strong>{{ data.paciente.nombre }}</strong>
+        </div>
+
+        <div>
+          <span>Apellidos</span>
+          <strong>{{ data.paciente.apellidos }}</strong>
+        </div>
+
+        <div>
+          <span>Fecha de nacimiento</span>
+          <strong>{{ data.paciente.fecNac | date:'dd/MM/yyyy' }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="consultas-section">
+      <h2>Consultas Médicas</h2>
+
+      <div *ngIf="data.consultas.length === 0" class="estado">
+        El paciente existe, pero aún no tiene consultas médicas registradas.
+      </div>
+
+      <div *ngFor="let consulta of data.consultas" class="consulta-card">
+        <div class="consulta-header">
+          <div>
+            <h3>Consulta #{{ consulta.idConsulta }}</h3>
+            <p>Cita #{{ consulta.idCita }} · Estado: {{ consulta.estadoCita }}</p>
+          </div>
+
+          <span class="fecha">
+            {{ consulta.fechaAtencion | date:'dd/MM/yyyy HH:mm' }}
+          </span>
+        </div>
+
+        <div class="medico-box">
+          <span>Médico tratante</span>
+
+          <strong>
+            {{ consulta.medico.nombre }} {{ consulta.medico.apellidos }}
+          </strong>
+
+          <p>
+            Especialidad:
+            {{ consulta.medico.especialidad || 'No asignada' }}
+          </p>
+        </div>
+
+        <div class="diagnostico-box">
+          <span>Diagnóstico</span>
+          <p>{{ consulta.diagnostico }}</p>
+        </div>
+
+        <div class="diagnostico-box">
+          <span>Observaciones</span>
+          <p>{{ consulta.observaciones || 'Sin observaciones registradas.' }}</p>
+        </div>
+
+        <div class="medicamentos-box">
+          <h4>Medicamentos recetados</h4>
+
+          <div *ngIf="consulta.medicamentos.length === 0" class="estado pequeño">
+            No hay medicamentos asociados a esta consulta.
+          </div>
+
+          <table *ngIf="consulta.medicamentos.length > 0">
+            <thead>
+              <tr>
+                <th>Medicamento</th>
+                <th>Composición</th>
+                <th>Recetado</th>
+                <th>Entregado</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let med of consulta.medicamentos">
+                <td>{{ med.nombreMedicamento }}</td>
+                <td>{{ med.composicion }}</td>
+                <td>{{ med.cantidadRecetada }}</td>
+                <td>{{ med.cantidadEntregada }}</td>
+                <td>{{ med.estadoEntrega }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>

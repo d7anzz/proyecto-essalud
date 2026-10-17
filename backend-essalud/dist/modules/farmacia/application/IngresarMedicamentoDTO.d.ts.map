@@ -1,0 +1,1 @@
+{"version":3,"file":"IngresarMedicamentoDTO.d.ts","sourceRoot":"","sources":["../../../../src/modules/farmacia/application/IngresarMedicamentoDTO.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,sBAAsB;IACrC,iBAAiB,EAAE,MAAM,CAAC;IAC1B,WAAW,EAAE,MAAM,CAAC;IACpB,eAAe,EAAE,MAAM,CAAC;IACxB,WAAW,EAAE,MAAM,CAAC;IACpB,gBAAgB,EAAE,MAAM,CAAC;CAC1B"}

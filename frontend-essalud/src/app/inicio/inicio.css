@@ -1,0 +1,131 @@
+.welcome-container {
+  padding: 1.5rem;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.welcome-header {
+  margin-bottom: 2.5rem;
+  text-align: left;
+}
+
+.welcome-header h1 {
+  color: #1e293b;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.module-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.2s,
+              box-shadow 0.2s;
+}
+
+.module-card:hover:not(.disabled) {
+  transform: translateY(-4px);
+  border-color: #0056b3;
+  box-shadow: 0 10px 20px rgba(0, 86, 179, 0.08);
+}
+
+.module-card .icon {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
+.module-card h3 {
+  color: #1e293b;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.module-card p {
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0 0 1.5rem 0;
+  flex-grow: 1;
+}
+
+.action-link {
+  color: #0056b3;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+
+.module-card:hover .action-link:not(.locked) {
+  color: #004085;
+}
+
+.module-card.disabled {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  cursor: not-allowed;
+}
+
+.action-link.locked {
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.farmacia-card:hover {
+  border-color: #10b981 !important;
+  box-shadow: 0 10px 20px rgba(16, 185, 129, 0.12) !important;
+}
+
+.farmacia-card:hover .action-link {
+  color: #10b981 !important;
+}
+
+.horario-card:hover {
+  border-color: #0056b3 !important;
+  box-shadow: 0 10px 20px rgba(0, 86, 179, 0.12) !important;
+}
+
+.horario-card:hover .action-link {
+  color: #0056b3 !important;
+}
+
+.citas-card:hover {
+  border-color: #0284c7 !important;
+  box-shadow: 0 10px 20px rgba(2, 132, 199, 0.12) !important;
+}
+
+.citas-card:hover .action-link {
+  color: #0284c7 !important;
+}
+
+.diagnosticos-card:hover {
+  border-color: #6366f1 !important;
+  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.12) !important;
+}
+
+.diagnosticos-card:hover .action-link {
+  color: #6366f1 !important;
+}

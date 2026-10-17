@@ -1,0 +1,252 @@
+/* =========================================================================
+   📦 CONTENEDOR BASE GENERAL
+   ========================================================================= */
+.profile-page-container {
+  padding: 0.5rem;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.page-header h1 {
+  color: #1e293b;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin: 0 0 2rem 0;
+}
+
+/* 🎛️ DISTRIBUCIÓN GRID EN DOS SECCIONES (FOTOCHECK + FORMULARIO) */
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  align-items: start;
+}
+
+/* =========================================================================
+   🪪 MAQUETACIÓN FOTOCHECK DIGITAL DE ESSALUD
+   ========================================================================= */
+.credential-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-top-bar {
+  background: #004085;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hospital-tag {
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.status-badge {
+  background: #cbd5e1;
+  color: #334155;
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-weight: 600;
+}
+
+.status-badge.active {
+  background: #e6f4ea;
+  color: #137333;
+}
+
+.card-body {
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-large {
+  width: 90px;
+  height: 90px;
+  background: #f1f5f9;
+  color: #0056b3;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  margin-bottom: 1.25rem;
+  border: 3px solid #e2e8f0;
+}
+
+.operator-title {
+  color: #1e293b;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.operator-role {
+  color: #0056b3;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin: 0.5rem 0 0 0;
+  background: #e6f0fa;
+  padding: 4px 14px;
+  border-radius: 50px;
+}
+
+.card-footer {
+  background: #f8fafc;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-info small {
+  color: #94a3b8;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.footer-info span {
+  color: #475569;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* =========================================================================
+   🔐 PANEL INTERACTIVO DE ACTUALIZACIÓN DE CONTRASEÑA
+   ========================================================================= */
+.details-panel {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.details-panel h3 {
+  color: #1e293b;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.15rem;
+}
+
+.panel-divider {
+  border: 0;
+  border-top: 1px solid #f1f5f9;
+  margin-bottom: 1.5rem;
+}
+
+.password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.info-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-group label {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-weight: 600;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* 📥 INPUTS DE CONTRASEÑA ESTILIZADOS */
+.info-group input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.95rem;
+  color: #334155;
+  background-color: #f8fafc;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.info-group input:focus {
+  outline: none;
+  border-color: #0056b3;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.15);
+}
+
+/* 🔘 BOTÓN PREMIUM DE GUARDADO INTEGRADO */
+.submit-pwd-btn {
+  background: #0056b3;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+  margin-top: 0.5rem;
+}
+
+.submit-pwd-btn:hover:not(:disabled) {
+  background: #004085;
+  box-shadow: 0 4px 12px rgba(0, 86, 179, 0.2);
+}
+
+.submit-pwd-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.submit-pwd-btn:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* 📢 MENSAJES DE ALERTA REACTIVOS (ESTILO ANGULAR 19 @if) */
+.alert-message {
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.4;
+  animation: slideInAlert 0.2s ease-out;
+}
+
+.error-alert {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.success-alert {
+  background-color: #f0fdf4;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+
+/* 🔑 ANIMACIÓN SUTIL PARA LA APARICIÓN DE ALERTAS */
+@keyframes slideInAlert {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

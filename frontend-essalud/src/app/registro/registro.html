@@ -1,0 +1,65 @@
+<div class="modulo-container">
+
+  <div class="registro-card">
+    <h2>Registrar Nuevo Personal de Salud</h2>
+
+    <form [formGroup]="registroForm" (ngSubmit)="onRegistrar()">
+
+      <div class="form-group">
+        <label>DNI</label>
+        <input type="text" formControlName="dni" maxlength="8" placeholder="Ingrese 8 dígitos">
+      </div>
+
+      <div class="form-group">
+        <label>Nombres</label>
+        <input type="text" formControlName="nombre" placeholder="Nombres del trabajador">
+      </div>
+
+      <div class="form-group">
+        <label>Apellidos</label>
+        <input type="text" formControlName="apellidos" placeholder="Apellidos del trabajador">
+      </div>
+
+      <div class="form-group">
+        <label>Nombre de Usuario</label>
+        <input type="text" formControlName="username" placeholder="Ej. c_perez">
+      </div>
+
+      <div class="form-group">
+        <label>Rol del Trabajador</label>
+        <select formControlName="id_rol">
+          <option value="1">MÉDICO</option>
+          <option value="2">ADMINISTRATIVO</option>
+          <option value="3">FARMACIA</option>
+          <option value="4">JEFE_HOSPITAL</option>
+        </select>
+      </div>
+
+      @if (registroForm.get('id_rol')?.value === '1') {
+        <div class="form-group">
+          <label>Número de Colegiatura (CMP)</label>
+          <input type="text" formControlName="colegiatura" placeholder="Ej. CMP-12345">
+        </div>
+
+        <div class="form-group">
+          <label>Especialidad Médica</label>
+          <select formControlName="id_especialidad">
+            <option value="">Seleccione especialidad...</option>
+            <option value="1">Cardiología</option>
+            <option value="2">Pediatría</option>
+            <option value="3">Medicina General</option>
+            <option value="4">Ginecología</option>
+            <option value="5">Neurología</option>
+          </select>
+        </div>
+      }
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancelar" (click)="regresar()">Cancelar</button>
+        <button type="submit" class="btn-guardar" [disabled]="registroForm.invalid">Registrar en Sistema</button>
+      </div>
+
+    </form>
+  </div>
+
+</div>

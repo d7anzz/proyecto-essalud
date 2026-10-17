@@ -1,0 +1,76 @@
+<div class="profile-page-container">
+
+  <header class="page-header">
+    <h1>Mi Perfil Institucional</h1>
+    <p class="subtitle">Gestión de credenciales del operador en el Sistema General.</p>
+  </header>
+
+  <div class="profile-grid">
+
+    <div class="credential-card">
+      <div class="card-top-bar">
+        <span class="hospital-tag">🏥 EsSalud</span>
+        <span class="status-badge active">{{ estadoCredencial() }}</span>
+      </div>
+
+      <div class="card-body">
+        <div class="avatar-large">👤</div>
+        <h2 class="operator-title">DNI {{ dniUsuario() }}</h2>
+        <p class="operator-role">{{ nombreRol() }}</p>
+      </div>
+
+      <div class="card-footer">
+        <div class="footer-info">
+          <small>Entidad emisora</small>
+          <span>{{ institucion() }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="details-panel">
+      <h3>Actualizar Contraseña de Acceso</h3>
+      <hr class="panel-divider">
+
+      <form (submit)="actualizarPassword($event)" class="password-form">
+
+        <div class="info-group">
+          <label for="current-pwd">Contraseña Actual</label>
+          <input type="password" id="current-pwd" name="current" required
+                 (input)="passwordActual.set($any($event.target).value)"
+                 placeholder="Ingrese su clave actual para validar identidad">
+        </div>
+
+        <div class="info-group">
+          <label for="new-pwd">Nueva Contraseña</label>
+          <input type="password" id="new-pwd" name="new" required
+                 (input)="passwordNueva.set($any($event.target).value)"
+                 placeholder="Mínimo 8 caracteres">
+        </div>
+
+        <div class="info-group">
+          <label for="confirm-pwd">Confirmar Nueva Contraseña</label>
+          <input type="password" id="confirm-pwd" name="confirm" required
+                 (input)="passwordConfirmar.set($any($event.target).value)"
+                 placeholder="Repita la nueva contraseña">
+        </div>
+
+        @if (mensajeError()) {
+          <div class="alert-message error-alert">
+            ❌ {{ mensajeError() }}
+          </div>
+        }
+        @if (mensajeExito()) {
+          <div class="alert-message success-alert">
+            ✅ {{ mensajeExito() }}
+          </div>
+        }
+
+        <button type="submit" class="submit-pwd-btn" [disabled]="cargando()">
+          {{ cargando() ? 'Procesando Cambio...' : 'Guardar Nueva Contraseña' }}
+        </button>
+
+      </form>
+    </div>
+
+  </div>
+</div>

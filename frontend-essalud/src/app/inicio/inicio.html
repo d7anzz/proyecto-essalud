@@ -1,0 +1,66 @@
+<div class="welcome-container">
+
+  <section class="welcome-header">
+    <h1>¡Bienvenido al Sistema de Gestión de EsSalud!</h1>
+    <p class="subtitle">Seleccione el módulo al que desea ingresar para operar:</p>
+  </section>
+
+  <div class="modules-grid">
+
+    @if (idRol() === 1 || idRol() === 2 || idRol() === 4) {
+      <div class="module-card" [routerLink]="['/dashboard/pacientes']">
+        <div class="icon">👥</div>
+        <h3>Control de Pacientes</h3>
+        <p>Búsqueda en tiempo real por DNI, nombres, apellidos e historial general.</p>
+        <span class="action-link">Ingresar Módulo →</span>
+      </div>
+    }
+
+    @if (idRol() === 1 || idRol() === 2 || idRol() === 4) {
+      <div class="module-card citas-card" [routerLink]="['/dashboard/citas']">
+        <div class="icon">📋</div>
+        <h3>Control de Citas Médicas</h3>
+        <p>Agendado de consultas, monitoreo de estados de atención en salas y liberación de cupos.</p>
+        <span class="action-link">Gestionar Citas →</span>
+      </div>
+    }
+
+    @if (idRol() === 3 || idRol() === 4) {
+      <div class="module-card farmacia-card" [routerLink]="['/dashboard/farmacia']">
+        <div class="icon">💊</div>
+        <h3>Despacho de Farmacia</h3>
+        <p>Validación de recetas médicas, control de stock de medicamentos y entrega rápida.</p>
+        <span class="action-link">Atender Despacho →</span>
+      </div>
+    }
+
+    @if (idRol() === 2 || idRol() === 4) {
+      <div class="module-card" [routerLink]="['/dashboard/registro']">
+        <div class="icon">💼</div>
+        <h3>Registro de Personal</h3>
+        <p>Alta de nuevos trabajadores en el sistema: Médicos, Administrativos o Farmacia.</p>
+        <span class="action-link">Acceder Registro →</span>
+      </div>
+    }
+
+    @if (idRol() === 1 || idRol() === 2 || idRol() === 4) {
+      <div class="module-card horario-card" [routerLink]="['/dashboard/horarios']">
+        <div class="icon">📅</div>
+        <h3>Gestión de Horarios</h3>
+        <p>Configuración y registro de sus turnos médicos asistenciales, áreas y estados de guardia.</p>
+        <span class="action-link">Gestionar Turnos →</span>
+      </div>
+    }
+
+      @if (idRol() === 2 || idRol() === 4) {
+    <div class="module-card reportes-card" [routerLink]="['/dashboard/reportes']">
+      <div class="icon">📊</div>
+      <h3>Reportes del Sistema</h3>
+      <p>Visualización general de pacientes, citas, consultas médicas y estado de farmacia.</p>
+      <span class="action-link">Ver Reportes →</span>
+    </div>
+  }
+
+
+  </div>
+</div>
