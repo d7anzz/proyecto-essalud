@@ -21,10 +21,12 @@ export class RegistroComponent implements OnInit {
 
   registroForm = this.fb.group({
     dni: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],
-    nombre: ['', Validators.required],
-    apellidos: ['', Validators.required],
-    username: ['', Validators.required],
-    id_rol: ['2', Validators.required],
+    nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$')]],
+    apellidos: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$')]],
+    fec_nac: ['', []],
+    telefono: ['', [Validators.pattern('^[0-9]{9}$')]],
+    username: ['', [Validators.required]],
+    id_rol: ['2', [Validators.required]],
     colegiatura: [{ value: '', disabled: true }],
     id_especialidad: [{ value: '', disabled: true }]
   });
@@ -42,7 +44,7 @@ export class RegistroComponent implements OnInit {
 
       if (rol === '1') {
         cmp?.enable();
-        cmp?.setValidators([Validators.required]);
+        cmp?.setValidators([Validators.required, Validators.pattern('^[0-9]{5,6}$')]);
         esp?.enable();
         esp?.setValidators([Validators.required]);
       } else {
@@ -77,11 +79,12 @@ export class RegistroComponent implements OnInit {
           alert('Error al registrar: ' + (err.error?.message || err.error?.error || 'Error de conexión o de autorización.'));
         }
       });
+    } else {
+      this.registroForm.markAllAsTouched();
     }
   }
 
   regresar(): void {
-    // 🟦 FIX: Redirección acoplada a la estructura hija del layout
     this.router.navigate(['/dashboard/inicio']);
   }
 }

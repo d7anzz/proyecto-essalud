@@ -5,28 +5,63 @@
 
     <form [formGroup]="registroForm" (ngSubmit)="onRegistrar()">
 
+      <!-- DNI -->
       <div class="form-group">
-        <label>DNI</label>
+        <label>DNI *</label>
         <input type="text" formControlName="dni" maxlength="8" placeholder="Ingrese 8 dígitos">
+        @if (registroForm.get('dni')?.invalid && registroForm.get('dni')?.touched) {
+          <span class="error-text">El DNI debe tener exactamente 8 números.</span>
+        }
       </div>
 
+      <!-- NOMBRES -->
       <div class="form-group">
-        <label>Nombres</label>
+        <label>Nombres *</label>
         <input type="text" formControlName="nombre" placeholder="Nombres del trabajador">
+        @if (registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched) {
+          <span class="error-text">Ingrese solo letras (entre 3 y 50 caracteres).</span>
+        }
       </div>
 
+      <!-- APELLIDOS -->
       <div class="form-group">
-        <label>Apellidos</label>
+        <label>Apellidos *</label>
         <input type="text" formControlName="apellidos" placeholder="Apellidos del trabajador">
+        @if (registroForm.get('apellidos')?.invalid && registroForm.get('apellidos')?.touched) {
+          <span class="error-text">Ingrese solo letras (entre 3 y 50 caracteres).</span>
+        }
       </div>
 
+      <!-- FECHA DE NACIMIENTO -->
       <div class="form-group">
-        <label>Nombre de Usuario</label>
+        <label>Fecha de Nacimiento</label>
+        <input type="date" formControlName="fec_nac">
+        @if (registroForm.get('fec_nac')?.invalid && registroForm.get('fec_nac')?.touched) {
+          <span class="error-text">La fecha debe ser válida y no ser futura ni mayor a 80 años.</span>
+        }
+      </div>
+
+      <!-- TELÉFONO -->
+      <div class="form-group">
+        <label>Teléfono</label>
+        <input type="text" formControlName="telefono" maxlength="9" placeholder="987654321">
+        @if (registroForm.get('telefono')?.invalid && registroForm.get('telefono')?.touched) {
+          <span class="error-text">El teléfono debe contener exactamente 9 dígitos.</span>
+        }
+      </div>
+
+      <!-- USERNAME -->
+      <div class="form-group">
+        <label>Nombre de Usuario *</label>
         <input type="text" formControlName="username" placeholder="Ej. c_perez">
+        @if (registroForm.get('username')?.invalid && registroForm.get('username')?.touched) {
+          <span class="error-text">El nombre de usuario es requerido.</span>
+        }
       </div>
 
+      <!-- ROL -->
       <div class="form-group">
-        <label>Rol del Trabajador</label>
+        <label>Rol del Trabajador *</label>
         <select formControlName="id_rol">
           <option value="1">MÉDICO</option>
           <option value="2">ADMINISTRATIVO</option>
@@ -35,14 +70,18 @@
         </select>
       </div>
 
+      <!-- CAMPOS DINÁMICOS PARA MÉDICO -->
       @if (registroForm.get('id_rol')?.value === '1') {
         <div class="form-group">
-          <label>Número de Colegiatura (CMP)</label>
-          <input type="text" formControlName="colegiatura" placeholder="Ej. CMP-12345">
+          <label>Número de Colegiatura (CMP) *</label>
+          <input type="text" formControlName="colegiatura" maxlength="6" placeholder="Ej. 12345 (5 a 6 dígitos)">
+          @if (registroForm.get('colegiatura')?.invalid && registroForm.get('colegiatura')?.touched) {
+            <span class="error-text">La colegiatura debe tener solo dígitos (entre 5 y 6).</span>
+          }
         </div>
 
         <div class="form-group">
-          <label>Especialidad Médica</label>
+          <label>Especialidad Médica *</label>
           <select formControlName="id_especialidad">
             <option value="">Seleccione especialidad...</option>
             <option value="1">Cardiología</option>
@@ -51,9 +90,13 @@
             <option value="4">Ginecología</option>
             <option value="5">Neurología</option>
           </select>
+          @if (registroForm.get('id_especialidad')?.invalid && registroForm.get('id_especialidad')?.touched) {
+            <span class="error-text">Debe seleccionar una especialidad válida.</span>
+          }
         </div>
       }
 
+      <!-- ACCIONES -->
       <div class="form-actions">
         <button type="button" class="btn-cancelar" (click)="regresar()">Cancelar</button>
         <button type="submit" class="btn-guardar" [disabled]="registroForm.invalid">Registrar en Sistema</button>
