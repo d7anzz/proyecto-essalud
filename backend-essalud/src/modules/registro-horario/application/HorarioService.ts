@@ -12,12 +12,36 @@ export class HorarioService {
   constructor(private readonly repo: HorarioRepository) {}
 
   async crear(dto: CrearHorarioDTO, rolEjecutor: number): Promise<Horario> {
+    // 1. Validar Permiso de Rol
     if (!this.ROLES_PERMITIDOS.includes(rolEjecutor)) {
       throw new Error('Acceso denegado: Solo el personal Médico (Rol 1) está autorizado.');
     }
 
+    // 2. Validar Turno Obligatorio (ID 74)
+    if (!dto.turno || String(dto.turno).trim() === '') {
+      throw new Error('El campo no puede estar vacío');
+    }
+
+    // 3. Validar Antelación de Fecha (IDs 71, 72 y Caso Integración 9)
+    if (dto.fecha) {
+      const hoy = new Date();
+      hoy.setHours(0, 0, 0, 0);
+
+      const partes = dto.fecha.split('-');
+      const fechaIngresada = new Date(Number(partes[0]), Number(partes[1]) - 1, Number(partes[2]));
+      fechaIngresada.setHours(0, 0, 0, 0);
+
+      const fechaMinimaPermitida = new Date(hoy);
+      fechaMinimaPermitida.setDate(hoy.getDate() + 3);
+
+      if (fechaIngresada < fechaMinimaPermitida) {
+        throw new Error('Fecha inválida');
+      }
+    }
+
+    // 4. Validar Cantidad de Pacientes
     if (!dto.cantidadPacientes || dto.cantidadPacientes <= 0) {
-      throw new Error('🚫 Validación: Debes ingresar una cantidad de pacientes mayor a 0.');
+      throw new Error('Validación: Debes ingresar una cantidad de pacientes mayor a 0.');
     }
 
     const factorSalto = this.DURACION_CITA_MINUTOS + this.INTERVALO_HOLGURA_MINUTOS; 
@@ -27,8 +51,10 @@ export class HorarioService {
     const minutosFinCalculado = minutosActual + minutosTotalesAgenda;
     const horaFinString = this.minutesToTime(minutosFinCalculado);
 
+    // 5. Validar Límites por Turno
     this.validarLimitesTurno(dto.turno, dto.horaInicio, horaFinString);
 
+    // 6. Verificar Choque de Horas en Agenda
     await this.verificarChoqueDeHoras(dto.dni, dto.fecha, dto.horaInicio, horaFinString);
 
     let ultimoHorarioCreado: Horario | null = null;
@@ -103,21 +129,21 @@ export class HorarioService {
       const inicioInvalido = horaInicio < '06:00' || horaInicio > '08:00';
       const finInvalido = horaFin > '14:00';
       if (inicioInvalido || finInvalido) {
-        throw new Error(`🚫 Exceso de Capacidad: Con esa cantidad de pacientes, tu salida sería a las ${horaFin}. Para el turno MAÑANA, el límite máximo de salida es a las 14:00.`);
+        throw new Error(`Exceso de Capacidad: Con esa cantidad de pacientes, tu salida sería a las ${horaFin}. Para el turno MAÑANA, el límite máximo de salida es a las 14:00.`);
       }
     } 
     else if (turno === 'TARDE') {
       const inicioInvalido = horaInicio < '12:00' || horaInicio > '14:00';
       const finInvalido = horaFin > '20:00';
       if (inicioInvalido || finInvalido) {
-        throw new Error(`🚫 Exceso de Capacidad: Con esa cantidad de pacientes, tu salida sería a las ${horaFin}. Para el turno TARDE, el límite máximo de salida es a las 20:00.`);
+        throw new Error(`Exceso de Capacidad: Con esa cantidad de pacientes, tu salida sería a las ${horaFin}. Para el turno TARDE, el límite máximo de salida es a las 20:00.`);
       }
     } 
     else if (turno === 'NOCHE') {
       const inicioInvalido = horaInicio < '18:00' || horaInicio > '20:00';
       const finInvalido = horaFin > '08:00';
       if (inicioInvalido || finInvalido) {
-        throw new Error(`🚫 Exceso de Capacidad: Tu salida excedería el límite del descanso obligatorio del turno NOCHE.`);
+        throw new Error(`Exceso de Capacidad: Tu salida excedería el límite del descanso obligatorio del turno NOCHE.`);
       }
     }
   }
@@ -130,7 +156,7 @@ export class HorarioService {
       if (existente.turno === 'NOCHE') seSolapan = true;
 
       if (seSolapan) {
-        throw new Error(`🚫 Conflicto de Agenda: Al calcular tus cupos, se cruzan con un turno existente de ${existente.horaInicio} a ${existente.horaFin}.`);
+        throw new Error(`Conflicto de Agenda: Al calcular tus cupos, se cruzan con un turno existente de ${existente.horaInicio} a ${existente.horaFin}.`);
       }
     }
   }

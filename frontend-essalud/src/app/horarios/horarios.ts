@@ -53,10 +53,11 @@ export class RegistroHorarioComponent implements OnInit {
     const aDia = String(ahora.getDate()).padStart(2, '0');
     this.hoyTexto = `${aAnio}-${aMes}-${aDia}`;
 
-    const limiteCrear = new Date(aAnio, ahora.getMonth(), ahora.getDate() + 2);
+    // Mínimo 3 días de antelación requerido por el Backend
+    const limiteCrear = new Date(aAnio, ahora.getMonth(), ahora.getDate() + 3);
     this.fechaMinimaParaCrear = this.formatearFechaISO(limiteCrear);
 
-    const limiteModificar = new Date(aAnio, ahora.getMonth(), ahora.getDate() + 2);
+    const limiteModificar = new Date(aAnio, ahora.getMonth(), ahora.getDate() + 3);
     this.fechaLimiteParaModificar = this.formatearFechaISO(limiteModificar);
   }
 
@@ -208,7 +209,7 @@ export class RegistroHorarioComponent implements OnInit {
     if (!this.esMedico) return;
 
     if (fechaDia < this.fechaMinimaParaCrear) {
-      this.mostrarMensaje('🚫 Regla Institucional: Los turnos asistenciales deben registrarse con un mínimo de 2 días (48h) de anticipación.', 'error');
+      this.mostrarMensaje('Regla Institucional: Los turnos asistenciales deben registrarse con un mínimo de 3 días (72h) de anticipación.', 'error');
       return;
     }
 
@@ -236,7 +237,7 @@ export class RegistroHorarioComponent implements OnInit {
     if (!this.esMedico) return;
 
     if (this.form.fecha < this.fechaMinimaParaCrear) {
-      this.mostrarMensaje('🚫 Fecha inválida: No cumple con los 2 días mínimos de anticipación.', 'error');
+      this.mostrarMensaje('Fecha inválida: No cumple con los 3 días mínimos de anticipación.', 'error');
       return;
     }
 
@@ -265,7 +266,7 @@ export class RegistroHorarioComponent implements OnInit {
     if (!this.esMedico) return;
 
     if (fechaGuardia < this.fechaLimiteParaModificar) {
-      this.mostrarMensaje('🚫 Acción denegada: No se puede dar de baja un turno con menos de 2 días de anticipación.', 'error');
+      this.mostrarMensaje('Acción denegada: No se puede dar de baja un turno con menos de 3 días de anticipación.', 'error');
       return;
     }
 
