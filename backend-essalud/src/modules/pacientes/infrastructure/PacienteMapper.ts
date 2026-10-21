@@ -7,7 +7,11 @@ export class PacienteMapper {
       model.dni,
       model.nombre,
       model.apellidos,
-      model.fechaNacimiento
+      model.fechaNacimiento,
+      model.sexo,
+      model.telefono,
+      model.tipoSeguro,
+      model.grupoSanguineo
     );
   }
 
@@ -17,6 +21,10 @@ export class PacienteMapper {
     model.nombre = paciente.nombre;
     model.apellidos = paciente.apellidos;
     model.fechaNacimiento = paciente.fechaNacimiento;
+    model.sexo = paciente.sexo;
+    model.telefono = paciente.telefono;
+    model.tipoSeguro = paciente.tipoSeguro;
+    model.grupoSanguineo = paciente.grupoSanguineo;
     return model;
   }
 }

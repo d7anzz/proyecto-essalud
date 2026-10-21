@@ -1,9 +1,11 @@
 export interface RegistrarPersonalDTO {
-  dni: string;            
-  username: string;       
-  nombre: string;        
-  apellidos: string;      
-  idRol: number;          
-  colegiatura?: string;   
-  idEspecialidad?: number; 
+  dni: string;
+  nombre: string;
+  apellidos: string;
+  username: string;
+  idRol: number;
+  colegiatura?: string | null;
+  idEspecialidad?: number | null;
+  telefono?: string | null;
+  fecNac?: string | null;
 }

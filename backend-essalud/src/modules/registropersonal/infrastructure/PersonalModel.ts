@@ -21,8 +21,14 @@ export class PersonalModel {
   @Column({ type: 'varchar', length: 50, name: 'apellidos' })
   apellidos!: string;
 
-  @Column({ type: 'varchar', length: 20, name: 'colegiatura', nullable: true, unique: true })
+  @Column({ type: 'date', name: 'fec_nac', nullable: true })
+  fecNac!: Date | string | null;
+
+  @Column({ type: 'varchar', length: 20, name: 'colegiatura', nullable: true })
   colegiatura!: string | null;
+
+  @Column({ type: 'varchar', length: 9, name: 'telefono', nullable: true })
+  telefono!: string | null;
 
   @Column({ type: 'int', name: 'id_especialidad', nullable: true })
   idEspecialidad!: number | null;

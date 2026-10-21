@@ -8,6 +8,7 @@
     "module": "commonjs",                      
     "target": "es2022",                        
     "lib": ["es2022"],
+    "types": ["node", "jest"],
     
     /* Other Outputs */
     "sourceMap": true,
@@ -25,7 +26,7 @@
     /* Recommended Options */
     "skipLibCheck": true,
     "experimentalDecorators": true,            
-    "emitDecoratorMetadata": true             
+    "emitDecoratorMetadata": true 
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

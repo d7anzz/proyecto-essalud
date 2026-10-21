@@ -37,7 +37,11 @@ export class PacientesController {
         dni: paciente.dni,
         nombre: paciente.nombre,
         apellidos: paciente.apellidos,
-        fec_nac: (paciente as any).fechaNacimiento || (paciente as any).fec_nac
+        fec_nac: (paciente as any).fechaNacimiento || (paciente as any).fec_nac,
+        sexo: paciente.sexo,
+        telefono: paciente.telefono,
+        tipo_seguro: paciente.tipoSeguro,
+        grupo_sanguineo: paciente.grupoSanguineo
       }));
 
       res.status(200).json(jsonResponse);
@@ -61,7 +65,11 @@ export class PacientesController {
         dni: paciente.dni,
         nombre: paciente.nombre,
         apellidos: paciente.apellidos,
-        fec_nac: (paciente as any).fechaNacimiento || (paciente as any).fec_nac
+        fec_nac: (paciente as any).fechaNacimiento || (paciente as any).fec_nac,
+        sexo: paciente.sexo,
+        telefono: paciente.telefono,
+        tipo_seguro: paciente.tipoSeguro,
+        grupo_sanguineo: paciente.grupoSanguineo
       }));
 
       res.status(200).json({ ok: true, data: jsonResponse });
@@ -89,8 +97,6 @@ export class PacientesController {
           res.status(403).json({ error: 'Contraseña de confirmación incorrecta. Operación cancelada por seguridad.' });
           return;
         }
-      } else {
-        console.log('ℹ️ [Controlador] Modificación autorizada por firma digital JWT del operador.');
       }
 
       await this.pacienteService.actualizarPaciente(dni, dto);
@@ -120,8 +126,6 @@ export class PacientesController {
           res.status(403).json({ error: 'Contraseña de confirmación incorrecta. No se pudo eliminar al paciente.' });
           return;
         }
-      } else {
-        console.log('ℹ️ [Controlador] Eliminación autorizada por firma digital JWT del operador.');
       }
 
       await this.pacienteService.eliminarPaciente(dni);

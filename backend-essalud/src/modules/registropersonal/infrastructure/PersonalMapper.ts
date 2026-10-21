@@ -10,7 +10,9 @@ export class PersonalMapper {
       idRol, 
       model.colegiatura,
       model.idEspecialidad,
-      model.especialidad?.nombre
+      model.especialidad?.nombre,
+      model.telefono,
+      model.fecNac
     );
   }
 
@@ -21,6 +23,8 @@ export class PersonalMapper {
     model.apellidos = entity.apellidos;
     model.colegiatura = entity.colegiatura;
     model.idEspecialidad = entity.idEspecialidad;
+    model.telefono = entity.telefono;
+    model.fecNac = entity.fecNac ? new Date(entity.fecNac) : null;
     return model;
   }
 }

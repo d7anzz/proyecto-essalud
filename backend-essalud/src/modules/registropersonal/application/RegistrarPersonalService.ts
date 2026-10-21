@@ -2,25 +2,21 @@ import { PersonalRepository } from '../domain/PersonalRepository';
 import { Personal }           from '../domain/Personal';
 import { Usuario }            from '../../login/domain/Usuario'; 
 import bcrypt                 from 'bcryptjs';
-
-export interface RegistrarPersonalDTO {
-  dni: string;
-  nombre: string;
-  apellidos: string;
-  username: string;
-  idRol: number; 
-  colegiatura?: string | null;
-  idEspecialidad?: number | null;
-}
+import { RegistrarPersonalDTO } from './RegistrarPersonalDTO';
 
 export class RegistrarPersonalService {
-  private readonly ROLES_PERMITIDOS = [2, 4]; 
+  private readonly ROLES_PERMITIDOS_EJECUTOR = [2, 4]; 
+  private readonly ROLES_VALIDOS_SISTEMA = [1, 2, 3, 4]; // 1: Médico, 2: Admin, 3: Recepción, 4: Jefe
 
   constructor(private readonly personalRepository: PersonalRepository) {}
 
   async ejecutar(dto: RegistrarPersonalDTO, rolEjecutor: number): Promise<void> {
-    if (!this.ROLES_PERMITIDOS.includes(rolEjecutor)) {
+    if (!this.ROLES_PERMITIDOS_EJECUTOR.includes(rolEjecutor)) {
       throw new Error('Acceso denegado: Solo el Jefe de Hospital o el personal Administrativo están autorizados para registrar nuevos usuarios.');
+    }
+
+    if (!dto.idRol || !this.ROLES_VALIDOS_SISTEMA.includes(dto.idRol)) {
+      throw new Error('Rol inválido');
     }
 
     const existePersonal = await this.personalRepository.existePorDni(dto.dni);
@@ -50,7 +46,10 @@ export class RegistrarPersonalService {
       dto.apellidos,
       dto.idRol, 
       dto.colegiatura || null,  
-      dto.idEspecialidad || null 
+      dto.idEspecialidad || null,
+      undefined,
+      dto.telefono || null,
+      dto.fecNac || null
     );
 
     await this.personalRepository.guardarPersonalYCredenciales(credencialesUsuario, nuevoPersonal);

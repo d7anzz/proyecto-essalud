@@ -25,9 +25,13 @@ export class PacienteComponent implements OnInit {
 
   pacienteForm = this.fb.group({
     dni: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],
-    nombre: ['', Validators.required],
-    apellidos: ['', Validators.required],
-    fec_nac: ['', Validators.required]
+    nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+    apellidos: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+    fec_nac: ['', Validators.required],
+    sexo: ['', [Validators.required, Validators.pattern('^[MF]$')]],
+    telefono: ['', [Validators.required, Validators.pattern('^[0-9]{9}$')]],
+    tipo_seguro: ['TITULAR', Validators.required],
+    grupo_sanguineo: ['', Validators.required]
   });
 
   pacientesFiltrados = computed(() => {
@@ -68,7 +72,11 @@ export class PacienteComponent implements OnInit {
 
   abrirModalCrear(): void {
     this.esModoEdicion.set(false);
-    this.pacienteForm.reset();
+    this.pacienteForm.reset({
+      tipo_seguro: 'TITULAR',
+      sexo: '',
+      grupo_sanguineo: ''
+    });
     this.pacienteForm.get('dni')?.enable();
     this.mostrarModal.set(true);
   }
@@ -80,7 +88,11 @@ export class PacienteComponent implements OnInit {
       dni: paciente.dni,
       nombre: paciente.nombre,
       apellidos: paciente.apellidos,
-      fec_nac: paciente.fec_nac ? paciente.fec_nac.substring(0, 10) : ''
+      fec_nac: paciente.fec_nac ? paciente.fec_nac.substring(0, 10) : '',
+      sexo: paciente.sexo || 'M',
+      telefono: paciente.telefono || '',
+      tipo_seguro: paciente.tipo_seguro || 'TITULAR',
+      grupo_sanguineo: paciente.grupo_sanguineo || ''
     });
 
     this.pacienteForm.get('dni')?.disable();
@@ -114,6 +126,10 @@ export class PacienteComponent implements OnInit {
           apellidos: formularioValores.apellidos!,
           fec_nac: formularioValores.fec_nac!,
           fechaNacimiento: formularioValores.fec_nac!,
+          sexo: formularioValores.sexo!,
+          telefono: formularioValores.telefono!,
+          tipoSeguro: formularioValores.tipo_seguro!,
+          grupoSanguineo: formularioValores.grupo_sanguineo!,
           passwordOperador: passConfirmacion
         };
 
@@ -135,14 +151,18 @@ export class PacienteComponent implements OnInit {
           nombre: formularioValores.nombre!,
           apellidos: formularioValores.apellidos!,
           fec_nac: formularioValores.fec_nac!,
-          fechaNacimiento: formularioValores.fec_nac!
+          fechaNacimiento: formularioValores.fec_nac!,
+          sexo: formularioValores.sexo!,
+          telefono: formularioValores.telefono!,
+          tipoSeguro: formularioValores.tipo_seguro!,
+          grupoSanguineo: formularioValores.grupo_sanguineo!
         };
 
         this.pacienteService.crearPaciente(nuevoPaciente as any).subscribe({
           next: () => {
             alert('✅ Paciente registrado exitosamente.');
             this.cargarPacientes();
-            this.pacienteForm.reset();
+            this.pacienteForm.reset({ tipo_seguro: 'TITULAR' });
             this.mostrarModal.set(false);
           },
           error: (err) => {

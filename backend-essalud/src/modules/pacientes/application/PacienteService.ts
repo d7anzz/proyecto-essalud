@@ -21,7 +21,12 @@ export class PacienteService {
       .setNombre(dto.nombre)
       .setApellidos(dto.apellidos)
       .setFechaNacimiento(dto.fechaNacimiento)
+      .setSexo(dto.sexo)
+      .setTelefono(dto.telefono)
+      .setTipoSeguro(dto.tipoSeguro)
+      .setGrupoSanguineo(dto.grupoSanguineo)
       .build();
+
     await this.pacienteRepository.guardar(nuevoPaciente);
   }
 
@@ -44,6 +49,10 @@ export class PacienteService {
       .setNombre(dto.nombre || pacienteExistente.nombre)
       .setApellidos(dto.apellidos || pacienteExistente.apellidos)
       .setFechaNacimiento(dto.fechaNacimiento || (pacienteExistente as any).fechaNacimiento || (pacienteExistente as any).fec_nac)
+      .setSexo(dto.sexo || pacienteExistente.sexo)
+      .setTelefono(dto.telefono !== undefined ? dto.telefono : pacienteExistente.telefono)
+      .setTipoSeguro(dto.tipoSeguro || pacienteExistente.tipoSeguro)
+      .setGrupoSanguineo(dto.grupoSanguineo !== undefined ? dto.grupoSanguineo : pacienteExistente.grupoSanguineo)
       .build();
 
     await this.pacienteRepository.guardar(pacienteActualizado);

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import { RegistrarPersonalService, RegistrarPersonalDTO } from '../application/RegistrarPersonalService';
+import { RegistrarPersonalService } from '../application/RegistrarPersonalService';
+import { RegistrarPersonalDTO } from '../application/RegistrarPersonalDTO';
 
 export class PersonalController {
   constructor(private readonly registrarPersonalService: RegistrarPersonalService) {}
@@ -31,7 +32,9 @@ export class PersonalController {
         username: body.username,
         idRol: Number(body.id_rol ?? body.idRol),
         colegiatura: body.colegiatura || null,
-        idEspecialidad: body.id_especialidad ? Number(body.id_especialidad) : null
+        idEspecialidad: body.id_especialidad ? Number(body.id_especialidad) : null,
+        telefono: body.telefono || null,
+        fecNac: body.fec_nac || body.fecNac || null
       };
 
       await this.registrarPersonalService.ejecutar(dto, Number(rolEjecutor));

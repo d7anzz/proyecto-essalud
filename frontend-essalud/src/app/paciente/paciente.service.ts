@@ -8,6 +8,10 @@ export interface PacienteResponse {
   nombre: string;
   apellidos: string;
   fec_nac: string;
+  sexo: string;
+  telefono?: string;
+  tipo_seguro?: string;
+  grupo_sanguineo?: string;
 }
 
 @Injectable({
