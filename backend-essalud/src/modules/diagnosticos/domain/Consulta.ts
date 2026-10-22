@@ -7,5 +7,10 @@ export class Consulta {
     public readonly diagnostico: string,
     public readonly observaciones: string,
     public readonly fechaAtencion?: Date
-  ) {}
+  ) {
+    const diagLimpio = diagnostico ? diagnostico.trim() : '';
+    if (diagLimpio.length < 5 || diagLimpio.length > 1000) {
+      throw new Error('El diagnóstico debe tener entre 5 y 1000 caracteres');
+    }
+  }
 }

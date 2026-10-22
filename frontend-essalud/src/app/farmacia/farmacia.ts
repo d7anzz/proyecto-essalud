@@ -35,14 +35,14 @@ export class FarmaciaComponent implements OnInit {
   // Listas de persistencia de datos maestro
   inventario: Medicamento[] = [];
   recetasPendientes: RecetaPendiente[] = []; // Contenedor del pool total de la API
-  recetasFiltradas: RecetaPendiente[] = [];  // 🚀 LA NUEVA LISTA RECOLECTORA QUE USARÁ EL @FOR
+  recetasFiltradas: RecetaPendiente[] = [];  // Lista recolectora para la vista
 
   // Variables de control de UI de Secciones Primarias
   mostrarModalAbastecer = false;
   cargando = false;
   vistaActual: 'RECETAS' | 'INVENTARIO' = 'RECETAS';
 
-  // 📑 CONTROL DE SUB-TABS INTERNOS PARA DESPACHO (Alineado a ASCII sin tildes)
+  // Control de sub-tabs internos para despacho
   tabRecetas: 'pendientes' | 'entregadas' = 'pendientes';
 
   // Mensajería institucional
@@ -66,10 +66,14 @@ export class FarmaciaComponent implements OnInit {
   }
 
   private establecerFechaMinima(): void {
-    const hoy = new Date();
-    const anio = hoy.getFullYear();
-    const mes = String(hoy.getMonth() + 1).padStart(2, '0');
-    const dia = String(hoy.getDate()).padStart(2, '0');
+    const fechaLimite = new Date();
+    // Sumamos 2 meses requeridos por la regla de negocio institucional
+    fechaLimite.setMonth(fechaLimite.getMonth() + 2);
+
+    const anio = fechaLimite.getFullYear();
+    const mes = String(fechaLimite.getMonth() + 1).padStart(2, '0');
+    const dia = String(fechaLimite.getDate()).padStart(2, '0');
+
     this.fechaMinimaParaIngreso = `${anio}-${mes}-${dia}`;
   }
 
@@ -77,7 +81,7 @@ export class FarmaciaComponent implements OnInit {
     return {
       nombreMedicamento: '',
       composicion: '',
-      amountIngreso: 1, // compatible con tu dto
+      amountIngreso: 1,
       cantidadIngreso: 1,
       stockMinimo: 10,
       fechaVencimiento: ''
@@ -110,7 +114,7 @@ export class FarmaciaComponent implements OnInit {
     this.router.navigate(['/dashboard/inicio']);
   }
 
-  // 📋 CANAL: CARGAR Y DISTRIBUIR RECETAS SEGÚN EL TAB ACTIVO
+  // Cargar y distribuir recetas según el tab activo
   cargarRecetas(): void {
     this.cargando = true;
     this.recetasFiltradas = [];
@@ -120,7 +124,7 @@ export class FarmaciaComponent implements OnInit {
       next: (res) => {
         this.recetasPendientes = res.data || [];
 
-        // 🚀 FILTRADO FLUIDO SEGÚN EL SUB-TAB SELECCIONADO
+        // Filtrado según el sub-tab seleccionado
         this.recetasFiltradas = this.recetasPendientes.filter((r: RecetaPendiente) => {
           const estado = String(r.estadoEntrega || '').toUpperCase().trim();
 
@@ -143,13 +147,13 @@ export class FarmaciaComponent implements OnInit {
     });
   }
 
-  // 🔁 Conmutador de Sub-Pestañas de Despacho
+  // Conmutador de sub-pestañas de despacho
   cambiarTabRecetas(tab: 'pendientes' | 'entregadas'): void {
     this.tabRecetas = tab;
-    this.cargarRecetas(); // Re-filtra los datos al instante
+    this.cargarRecetas();
   }
 
-  // 💊 CANAL: DESPACHAR ACTO MÉDICO
+  // Despachar acto médico
   despacharMedicamento(receta: RecetaPendiente): void {
     if (!confirm(`¿Confirmar la entrega de ${receta.cantidadRecetada} unidades de ${receta.nombreMedicamento} al paciente?`)) return;
 
@@ -162,7 +166,7 @@ export class FarmaciaComponent implements OnInit {
     this.service.entregarReceta(payloadDespacho).subscribe({
       next: (res) => {
         this.mostrarMensaje(res.mensaje || 'Medicamento entregado. Inventario MySQL actualizado.');
-        this.cargarRecetas(); // Refresca y mueve el ítem automáticamente al historial
+        this.cargarRecetas();
       },
       error: (err) => {
         const msg = err?.error?.mensaje || 'Error al procesar el despacho de insumos';
@@ -171,7 +175,7 @@ export class FarmaciaComponent implements OnInit {
     });
   }
 
-  // 📦 CANAL: INVENTARIO MAESTRO
+  // Inventario maestro
   cargarInventario(): void {
     this.inventario = [];
     this.cdr.detectChanges();
@@ -189,8 +193,8 @@ export class FarmaciaComponent implements OnInit {
   }
 
   guardarMedicamento(): void {
-    if (this.formMedicamento.fechaVencimiento <= this.fechaMinimaParaIngreso) {
-      this.mostrarMensaje('🚫 Validación: No se permite el ingreso de lotes vencidos o por vencer hoy.', 'error');
+    if (this.formMedicamento.fechaVencimiento < this.fechaMinimaParaIngreso) {
+      this.mostrarMensaje('La fecha de vencimiento debe ser mayor a 2 meses', 'error');
       return;
     }
 
@@ -215,7 +219,7 @@ export class FarmaciaComponent implements OnInit {
     });
   }
 
-  // 🔄 CONMUTADORES DE VISTA PRINCIPAL (Inventario vs Recetas)
+  // Conmutadores de vista principal (Inventario vs Recetas)
   cambiarVista(vista: 'RECETAS' | 'INVENTARIO'): void {
     this.vistaActual = vista;
     if (vista === 'RECETAS') {

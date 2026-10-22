@@ -1,40 +1,56 @@
 import { ConsultaRepository } from '../domain/ConsultaRepository';
 import { Consulta } from '../domain/Consulta';
 import { CrearConsultaDTO } from './CrearConsultaDTO';
+import { CitaRepository } from '../../citas/domain/CitaRepository';
 
 export class ConsultaService {
   private readonly ROL_MEDICO = 1;
 
-  constructor(private readonly repo: ConsultaRepository) {}
+  constructor(
+    private readonly repo: ConsultaRepository,
+    private readonly citaRepo?: CitaRepository
+  ) {}
 
   async crearConsultaMedica(dto: CrearConsultaDTO, rolEjecutor: number): Promise<void> {
-    // 🛡️ Regla de oro: Solo el médico puede diagnosticar
     if (rolEjecutor !== this.ROL_MEDICO) {
       throw new Error('Acceso denegado: Solo el personal Médico (Rol 1) está autorizado para emitir diagnósticos y recetas.');
     }
 
-    // 🚫 Validaciones de campos obligatorios institucionales
     if (!dto.idCita || !dto.dniPaciente || !dto.idMedico) {
-      throw new Error('🚫 Validación: La información de la cita, paciente y médico son obligatorios.');
+      throw new Error('Validación: La información de la cita, paciente y médico son obligatorios.');
     }
 
-    if (!dto.diagnostico || dto.diagnostico.trim().length < 5) {
-      throw new Error('🚫 Validación: Debes ingresar un diagnóstico clínico válido y descriptivo.');
+    if (this.citaRepo) {
+      const cita = await this.citaRepo.obtenerPorId(dto.idCita);
+      if (cita && cita.estado === 'COMPLETADA') {
+        throw new Error('La cita ya ha sido atendida previamente');
+      }
     }
 
-    // Adaptamos el DTO a la entidad de dominio limpia
+    const diagnosticoLimpio = dto.diagnostico ? dto.diagnostico.trim() : '';
+    if (diagnosticoLimpio.length < 5 || diagnosticoLimpio.length > 1000) {
+      throw new Error('El diagnóstico debe tener entre 5 y 1000 caracteres');
+    }
+
+    const medicamentosRecetados = dto.medicamentos || [];
+    for (const med of medicamentosRecetados) {
+      if (med.cantidadRecetada < 0) {
+        throw new Error('La cantidad debe ser mayor o igual a 0');
+      }
+      if (med.cantidadRecetada > 100) {
+        throw new Error('El máximo recetable es de 100 unidades');
+      }
+    }
+
     const nuevaConsulta = new Consulta(
       0,
       dto.idCita,
       dto.dniPaciente,
       dto.idMedico,
-      dto.diagnostico.trim(),
-      dto.observaciones.trim()
+      diagnosticoLimpio,
+      dto.observaciones ? dto.observaciones.trim() : ''
     );
 
-    const medicamentosRecetados = dto.medicamentos || [];
-
-    // Enviamos al repositorio transaccional
     await this.repo.crearTransaccional(nuevaConsulta, medicamentosRecetados);
   }
 }

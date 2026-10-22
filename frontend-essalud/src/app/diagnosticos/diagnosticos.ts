@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { DiagnosticosService } from './diagnosticos.service';
 
-// 📋 INTERFACES (Obligatorias para el tipado de TypeScript)
 export interface PacienteNavegacion {
   idCita: number;
   dniPaciente: string;
@@ -44,7 +43,7 @@ export class DiagnosticosComponent implements OnInit {
   mensaje = '';
   tipoMensaje: 'exito' | 'error' = 'exito';
 
-  // 🕋 variable de control para la visibilidad del dropdown personalizado
+  // Variable de control para la visibilidad del dropdown personalizado
   mostrarDropdown = false;
 
   constructor(
@@ -107,7 +106,7 @@ export class DiagnosticosComponent implements OnInit {
     });
   }
 
-  // 🔍 Filtra el catálogo en tiempo real por Nombre o por Composición Química
+  // Filtra el catálogo en tiempo real por Nombre o Composición Química
   filtrarMedicamentos(): MedicamentoCatalogo[] {
     const busqueda = this.nombreMedicamentoBuscado.trim().toLowerCase();
     if (!busqueda) {
@@ -119,7 +118,7 @@ export class DiagnosticosComponent implements OnInit {
     );
   }
 
-  // 🎯 Captura la selección de la fila flotante del dropdown
+  // Captura la selección del dropdown
   seleccionarMedicamentoDropdown(med: MedicamentoCatalogo): void {
     if (med.stockActual <= 0) return;
     this.nombreMedicamentoBuscado = med.nombreMedicamento;
@@ -127,7 +126,7 @@ export class DiagnosticosComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  // ⏱️ Retraso preventivo para que el evento 'click' del div se procese antes de que el input pierda el foco
+  // Retraso preventivo para que el click se procese antes del blur
   ocultarDropdownConRetraso(): void {
     setTimeout(() => {
       this.mostrarDropdown = false;
@@ -184,7 +183,7 @@ export class DiagnosticosComponent implements OnInit {
     if (!this.pacienteEnConsulta) return;
 
     if (!this.formConsulta.diagnostico || this.formConsulta.diagnostico.trim().length < 5) {
-      this.mostrarMensaje('🚫 El diagnóstico clínico es obligatorio.', 'error');
+      this.mostrarMensaje('El diagnóstico debe tener entre 5 y 1000 caracteres', 'error');
       return;
     }
 
@@ -212,7 +211,8 @@ export class DiagnosticosComponent implements OnInit {
   }
 
   mostrarMensaje(texto: string, tipo: 'exito' | 'error' = 'exito'): void {
-    this.mensaje = texto; this.tipoMensaje = tipo;
+    this.mensaje = texto;
+    this.tipoMensaje = tipo;
     this.cdr.detectChanges();
     setTimeout(() => { this.mensaje = ''; this.cdr.detectChanges(); }, 4000);
   }
