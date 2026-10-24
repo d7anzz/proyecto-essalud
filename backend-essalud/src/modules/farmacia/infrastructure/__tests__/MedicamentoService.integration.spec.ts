@@ -15,7 +15,6 @@ describe('Pruebas de Integración: Módulo Registro de Medicamentos (Casos ID 19
 
   const ROL_FARMACEUTICO = 3;
 
-  // Helper para generar fechas dinámicas en formato YYYY-MM-DD
   const obtenerFechaFuturaMeses = (meses: number): string => {
     const fecha = new Date();
     fecha.setMonth(fecha.getMonth() + meses);
@@ -66,9 +65,6 @@ describe('Pruebas de Integración: Módulo Registro de Medicamentos (Casos ID 19
     }
   });
 
-  // =========================================================
-  // CASO INTEGRACIÓN 19: REGISTRO EXITOSO DE MEDICAMENTO
-  // =========================================================
   it('ID 19 (Integración): Registrar medicamento exitosamente', async () => {
     const dto: IngresarMedicamentoDTO = {
       nombreMedicamento: 'Paracetamol 500mg',
@@ -83,7 +79,6 @@ describe('Pruebas de Integración: Módulo Registro de Medicamentos (Casos ID 19
     expect(resultado).not.toBeNull();
     expect(resultado.nombreMedicamento).toBe('Paracetamol 500mg');
 
-    // Verificar en la base de datos real
     const medEnBD = await dataSource.getRepository(MedicamentoModel).findOneBy({
       nombreMedicamento: 'Paracetamol 500mg'
     });
@@ -91,9 +86,6 @@ describe('Pruebas de Integración: Módulo Registro de Medicamentos (Casos ID 19
     expect(medEnBD?.stockActual).toBe(50);
   });
 
-  // =========================================================
-  // CASO INTEGRACIÓN 20: REGISTRO EXITOSO CON ALERTA DE STOCK CRÍTICO
-  // =========================================================
   it('ID 20 (Integración): Registro exitoso, dispara la alerta de stock crítico', async () => {
     const dto: IngresarMedicamentoDTO = {
       nombreMedicamento: 'Paracetamol 500mg',
@@ -108,16 +100,12 @@ describe('Pruebas de Integración: Módulo Registro de Medicamentos (Casos ID 19
     expect(resultado).not.toBeNull();
     expect(resultado.stockActual).toBeLessThanOrEqual(resultado.stockMinimo);
 
-    // Verificar persistencia del stock en la BD
     const medEnBD = await dataSource.getRepository(MedicamentoModel).findOneBy({
       nombreMedicamento: 'Paracetamol 500mg'
     });
     expect(medEnBD?.stockActual).toBe(10);
   });
 
-  // =========================================================
-  // CASO INTEGRACIÓN 21: RECHAZAR STOCK NEGATIVO
-  // =========================================================
   it('ID 21 (Integración): Rechazar registro si el stock es un número negativo', async () => {
     const dto: IngresarMedicamentoDTO = {
       nombreMedicamento: 'Paracetamol 500mg',
@@ -132,9 +120,6 @@ describe('Pruebas de Integración: Módulo Registro de Medicamentos (Casos ID 19
     );
   });
 
-  // =========================================================
-  // CASO INTEGRACIÓN 22: RECHAZAR VENCIMIENTO MENOR A 2 MESES
-  // =========================================================
   it('ID 22 (Integración): Rechazar registro si la fecha de vencimiento no es mayor a 2 meses', async () => {
     const dto: IngresarMedicamentoDTO = {
       nombreMedicamento: 'Paracetamol 500mg',

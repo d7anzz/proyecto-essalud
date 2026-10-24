@@ -10,6 +10,16 @@ import {
 import * as ExcelJS from 'exceljs';
 
 export class ReportesService {
+  private readonly ROLES_VALIDOS = [
+    'MÉDICO',
+    'MEDICO',
+    'ENFERMERO',
+    'FARMACÉUTICO',
+    'FARMACEUTICO',
+    'ADMINISTRATIVO'
+  ];
+  private readonly ESPECIALIDADES_VALIDAS = [1, 2, 3, 4, 5];
+
   constructor(private readonly reportesRepository: ReportesRepository) {}
 
   async obtenerResumen(): Promise<ResumenReportes> {
@@ -22,6 +32,9 @@ export class ReportesService {
     idEspecialidad?: string,
     estado?: string
   ): Promise<any[]> {
+    this.validarRangoFechas(fechaInicio, fechaFin);
+    this.validarEspecialidad(idEspecialidad);
+
     return await this.reportesRepository.listarCitasReporte(
       fechaInicio,
       fechaFin,
@@ -38,6 +51,18 @@ export class ReportesService {
     rol?: string,
     idEspecialidad?: string
   ): Promise<PersonalReporte[]> {
+    if (rol && rol !== 'TODOS') {
+      const rolUpper = rol.toUpperCase().trim();
+      const esRolValido = this.ROLES_VALIDOS.includes(rolUpper);
+      const idRolNum = Number(rol);
+
+      if (!esRolValido && (isNaN(idRolNum) || idRolNum < 1 || idRolNum > 4)) {
+        throw new Error('Rol no registrado');
+      }
+    }
+
+    this.validarEspecialidad(idEspecialidad);
+
     return await this.reportesRepository.listarPersonalReporte(
       rol,
       idEspecialidad
@@ -49,11 +74,56 @@ export class ReportesService {
     fechaFin?: string,
     idEspecialidad?: string
   ): Promise<ConsultaReporte[]> {
+    this.validarRangoFechas(fechaInicio, fechaFin);
+    this.validarEspecialidad(idEspecialidad);
+
     return await this.reportesRepository.listarConsultasReporte(
       fechaInicio,
       fechaFin,
       idEspecialidad
     );
+  }
+
+  private validarRangoFechas(fechaInicio?: string, fechaFin?: string): void {
+    if (fechaInicio && !this.esFechaValida(fechaInicio)) {
+      throw new Error('Formato no válido');
+    }
+
+    if (fechaFin && !this.esFechaValida(fechaFin)) {
+      throw new Error('Formato no válido');
+    }
+
+    if (fechaInicio && fechaFin) {
+      const inicio = new Date(fechaInicio);
+      const fin = new Date(fechaFin);
+
+      if (inicio > fin) {
+        throw new Error('La fecha de inicio no puede ser mayor a la fecha de fin');
+      }
+    }
+  }
+
+  private esFechaValida(fechaStr: string): boolean {
+    const regexISO = /^\d{4}-\d{2}-\d{2}$/;
+    if (!regexISO.test(fechaStr)) return false;
+
+    const [anio, mes, dia] = fechaStr.split('-').map(Number) as [number, number, number];
+    const fecha = new Date(Date.UTC(anio, mes - 1, dia));
+
+    return (
+      fecha.getUTCFullYear() === anio &&
+      fecha.getUTCMonth() + 1 === mes &&
+      fecha.getUTCDate() === dia
+    );
+  }
+
+  private validarEspecialidad(idEspecialidad?: string): void {
+    if (idEspecialidad && idEspecialidad !== 'Todas') {
+      const idNum = Number(idEspecialidad);
+      if (isNaN(idNum) || !this.ESPECIALIDADES_VALIDAS.includes(idNum)) {
+        throw new Error('Especialidad no registrada');
+      }
+    }
   }
 
   async generarExcelCitas(

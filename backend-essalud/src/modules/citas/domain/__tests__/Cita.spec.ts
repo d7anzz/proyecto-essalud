@@ -29,21 +29,33 @@ describe('Pruebas Unitarias - Módulo Registro de Citas (Casos ID 79 al 90)', ()
     mockHorarioRepo = {
       crear: jest.fn(),
       listar: jest.fn(),
-      obtenerPorId: jest.fn().mockResolvedValue({
-        id: 100,
-        dni: '44445555',
-        fecha: obtenerFechaRelativa(3),
-        horaInicio: '08:00',
-        horaFin: '08:30',
-        turno: 'MAÑANA',
-        estado: 'DISPONIBLE'
-      } as any),
+      obtenerPorId: jest.fn().mockImplementation((id: number) => {
+        if (id === 101) {
+          return Promise.resolve({
+            id: 101,
+            dni: '44445555',
+            fecha: obtenerFechaRelativa(-1), // Fecha pasada (Ayer)
+            horaInicio: '08:00',
+            horaFin: '08:30',
+            turno: 'MAÑANA',
+            estado: 'DISPONIBLE'
+          } as any);
+        }
+        return Promise.resolve({
+          id: 100,
+          dni: '44445555',
+          fecha: obtenerFechaRelativa(3),
+          horaInicio: '08:00',
+          horaFin: '08:30',
+          turno: 'MAÑANA',
+          estado: 'DISPONIBLE'
+        } as any);
+      }),
       actualizar: jest.fn().mockResolvedValue(null),
       eliminar: jest.fn(),
       buscarPorMedicoYFecha: jest.fn(),
     };
 
-    // Objeto mock para PacienteRepository adaptado con todas las funciones requeridas por la interfaz
     mockPacienteRepo = {
       obtenerPorDni: jest.fn().mockImplementation((dni: string) => {
         if (dni === '12345678') {
@@ -66,9 +78,6 @@ describe('Pruebas Unitarias - Módulo Registro de Citas (Casos ID 79 al 90)', ()
     citaService = new CitaService(mockCitaRepo, mockHorarioRepo, mockPacienteRepo);
   });
 
-  // =========================================================
-  // BLOQUE 1: VALIDACIÓN DE DNI PACIENTE (IDs 79 - 81)
-  // =========================================================
   describe('Componente: DNI Paciente (IDs 79 - 81)', () => {
     it('ID 79: Agendar cita con DNI de paciente válido', async () => {
       const dto = {
@@ -106,9 +115,6 @@ describe('Pruebas Unitarias - Módulo Registro de Citas (Casos ID 79 al 90)', ()
     });
   });
 
-  // =========================================================
-  // BLOQUE 2: VALIDACIÓN DE ESPECIALIDAD (IDs 82 - 83)
-  // =========================================================
   describe('Componente: Especialidad (IDs 82 - 83)', () => {
     it('ID 82: Permitir agendar con especialidad válida', async () => {
       const dto = {
@@ -134,9 +140,6 @@ describe('Pruebas Unitarias - Módulo Registro de Citas (Casos ID 79 al 90)', ()
     });
   });
 
-  // =========================================================
-  // BLOQUE 3: VALIDACIÓN DE MÉDICO (IDs 84 - 85)
-  // =========================================================
   describe('Componente: Médico (IDs 84 - 85)', () => {
     it('ID 84: Permitir agendar con ID de médico registrada', async () => {
       const dto = {
@@ -162,9 +165,6 @@ describe('Pruebas Unitarias - Módulo Registro de Citas (Casos ID 79 al 90)', ()
     });
   });
 
-  // =========================================================
-  // BLOQUE 4: VALIDACIÓN DE FECHA (IDs 86 - 87)
-  // =========================================================
   describe('Componente: Fecha (IDs 86 - 87)', () => {
     it('ID 86: Agendar con fecha válida (Hoy + 3 días)', async () => {
       const dto = {
@@ -179,16 +179,6 @@ describe('Pruebas Unitarias - Módulo Registro de Citas (Casos ID 79 al 90)', ()
     });
 
     it('ID 87: Rechazar selección de fecha pasada (Ayer)', async () => {
-      mockHorarioRepo.obtenerPorId.mockResolvedValueOnce({
-        id: 101,
-        dni: '44445555',
-        fecha: obtenerFechaRelativa(-1),
-        horaInicio: '08:00',
-        horaFin: '08:30',
-        turno: 'MAÑANA',
-        estado: 'DISPONIBLE'
-      } as any);
-
       const dto = {
         dniPaciente: '12345678',
         dniMedico: '44445555',
@@ -200,9 +190,6 @@ describe('Pruebas Unitarias - Módulo Registro de Citas (Casos ID 79 al 90)', ()
     });
   });
 
-  // =========================================================
-  // BLOQUE 5: VALIDACIÓN DE HORARIO / SLOT (IDs 88 - 90)
-  // =========================================================
   describe('Componente: Horario (IDs 88 - 90)', () => {
     it('ID 88: Agendar exitosamente en un slot libre', async () => {
       const dto = {

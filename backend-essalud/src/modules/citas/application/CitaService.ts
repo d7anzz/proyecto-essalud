@@ -51,10 +51,19 @@ export class CitaService {
       throw new Error('Error de Consistencia: El bloque de horario seleccionado no existe en el sistema.');
     }
 
-    // 5. Validación de Especialidad (obtenida del horario o del personal asociado)
+    // 5. Validación de Fecha (No permitir fechas pasadas)
+    if (horario.fecha) {
+      const hoyStr = new Date().toISOString().split('T')[0]!;
+      const fechaHorarioStr = String(horario.fecha).split('T')[0]!;
+
+      if (fechaHorarioStr < hoyStr) {
+        throw new Error('Fecha inválida');
+      }
+    }
+
+    // 6. Validación de Especialidad
     const especialidadEfectiva = (horario as any).idEspecialidad || (horario as any).personal?.idEspecialidad || (horario as any).personal?.id_especialidad;
     if (especialidadEfectiva === undefined || especialidadEfectiva === null || String(especialidadEfectiva).trim() === '') {
-      // Si en las pruebas unitarias se envía idEspecialidad en el DTO mock, permitimos evaluarlo también de forma opcional por compatibilidad
       const especialidadDto = (dto as any).idEspecialidad;
       if (especialidadDto === undefined || especialidadDto === null || String(especialidadDto).trim() === '') {
         throw new Error('Debe seleccionar una especialidad');
@@ -69,23 +78,12 @@ export class CitaService {
       throw new Error('Horario inválido');
     }
 
-    // 6. Validación de Fecha (No permitir fechas pasadas)
-    if (horario.fecha) {
-      const fechaHorario = new Date(horario.fecha + 'T00:00:00');
-      const hoy = new Date();
-      hoy.setHours(0, 0, 0, 0);
-
-      if (fechaHorario < hoy) {
-        throw new Error('Fecha inválida');
-      }
-    }
-
     await this.horarioRepo.actualizar(horario.id, { estado: 'OCUPADO' });
 
     const cita = new Cita(
       0,
       dto.dniPaciente,
-      horario.dni,       
+      horario.dni,      
       horario.id,        
       'PENDIENTE' 
     );

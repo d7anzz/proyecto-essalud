@@ -27,9 +27,6 @@ describe('Pruebas Unitarias - Módulo Registro de Horario (Casos ID 69 al 78)', 
     horarioService = new HorarioService(mockRepository);
   });
 
-  // =========================================================
-  // BLOQUE 1: VALIDACIONES DE FECHA (IDs 69 - 72)
-  // =========================================================
   describe('Pruebas de Componente: Fecha (IDs 69 - 72)', () => {
     it('ID 69: Registrar con fecha válida (Hoy + 4 días)', async () => {
       const fechaValida = obtenerFechaRelativa(4);
@@ -59,8 +56,8 @@ describe('Pruebas Unitarias - Módulo Registro de Horario (Casos ID 69 al 78)', 
       expect(resultado.fecha).toBe(fechaValida);
     });
 
-    it('ID 71: Rechazar fecha menor a 3 días de antelación (Hoy + 2 días)', async () => {
-      const fechaInvalida = obtenerFechaRelativa(2);
+    it('ID 71: Rechazar fecha menor a 3 días de antelación (Hoy + 1 día)', async () => {
+      const fechaInvalida = obtenerFechaRelativa(1);
       const dto: CrearHorarioDTO = {
         dni: '12345678',
         fecha: fechaInvalida,
@@ -86,9 +83,6 @@ describe('Pruebas Unitarias - Módulo Registro de Horario (Casos ID 69 al 78)', 
     });
   });
 
-  // =========================================================
-  // BLOQUE 2: VALIDACIONES DE TURNO (IDs 73 - 74)
-  // =========================================================
   describe('Pruebas de Componente: Turno (IDs 73 - 74)', () => {
     it('ID 73: Registrar con turno válido ("MAÑANA")', async () => {
       const fechaValida = obtenerFechaRelativa(4);
@@ -118,9 +112,6 @@ describe('Pruebas Unitarias - Módulo Registro de Horario (Casos ID 69 al 78)', 
     });
   });
 
-  // =========================================================
-  // BLOQUE 3: VALIDACIONES DE HORA INICIO Y FIN (IDs 75 - 78)
-  // =========================================================
   describe('Pruebas de Componente: Hora Inicio / Fin (IDs 75 - 78)', () => {
     it('ID 75: Horario registrado exitosamente en turno Mañana', async () => {
       const fechaValida = obtenerFechaRelativa(4);

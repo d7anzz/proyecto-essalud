@@ -41,41 +41,6 @@ describe('Pruebas de Integración: Módulo de Registro de Horarios (Casos ID 8 a
 
     horarioRepository = new MysqlHorarioRepository(dataSource);
     horarioService = new HorarioService(horarioRepository);
-
-    // Inserción en usuarios y personal_salud con la estructura exacta de tu BD
-    const usuarioRepo = dataSource.getRepository(UsuarioModel);
-    const personalRepo = dataSource.getRepository(PersonalModel);
-
-    let usuarioExistente = await usuarioRepo.findOneBy({ dni: DNI_MEDICO_PRUEBA });
-    if (!usuarioExistente) {
-      await usuarioRepo.save({
-        dni: DNI_MEDICO_PRUEBA,
-        username: 'medico_test',
-        passwordHash: '$2a$10$hashdeprueba',
-        password_hash: '$2a$10$hashdeprueba',
-        password: '$2a$10$hashdeprueba',
-        idRol: ROL_MEDICO,
-        intentosFallidos: 0,
-        primerAcceso: false,
-        activo: true
-      } as any);
-    }
-
-    let personalExistente = await personalRepo.findOneBy({ dni: DNI_MEDICO_PRUEBA });
-    if (!personalExistente) {
-      await personalRepo.save({
-        dni: DNI_MEDICO_PRUEBA,
-        nombre: 'Medico',
-        apellidos: 'Prueba',
-        fec_nac: '1985-05-15',
-        fecNac: '1985-05-15',
-        fechaNacimiento: '1985-05-15',
-        colegiatura: '12345',
-        telefono: '987654321',
-        idEspecialidad: 1,
-        id_especialidad: 1
-      } as any);
-    }
   });
 
   afterAll(async () => {
@@ -89,7 +54,41 @@ describe('Pruebas de Integración: Módulo de Registro de Horarios (Casos ID 8 a
   beforeEach(async () => {
     if (dataSource && dataSource.isInitialized) {
       const horarioRepo = dataSource.getRepository(HorarioModel);
+      const usuarioRepo = dataSource.getRepository(UsuarioModel);
+      const personalRepo = dataSource.getRepository(PersonalModel);
+
       await horarioRepo.delete({ dni: DNI_MEDICO_PRUEBA });
+
+      let usuarioExistente = await usuarioRepo.findOneBy({ dni: DNI_MEDICO_PRUEBA });
+      if (!usuarioExistente) {
+        await usuarioRepo.save({
+          dni: DNI_MEDICO_PRUEBA,
+          username: 'medico_test',
+          passwordHash: '$2a$10$hashdeprueba',
+          password_hash: '$2a$10$hashdeprueba',
+          password: '$2a$10$hashdeprueba',
+          idRol: ROL_MEDICO,
+          intentosFallidos: 0,
+          primerAcceso: false,
+          activo: true
+        } as any);
+      }
+
+      let personalExistente = await personalRepo.findOneBy({ dni: DNI_MEDICO_PRUEBA });
+      if (!personalExistente) {
+        await personalRepo.save({
+          dni: DNI_MEDICO_PRUEBA,
+          nombre: 'Medico',
+          apellidos: 'Prueba',
+          fec_nac: '1985-05-15',
+          fecNac: '1985-05-15',
+          fechaNacimiento: '1985-05-15',
+          colegiatura: '12345',
+          telefono: '987654321',
+          idEspecialidad: 1,
+          id_especialidad: 1
+        } as any);
+      }
     }
   });
 
@@ -100,9 +99,6 @@ describe('Pruebas de Integración: Módulo de Registro de Horarios (Casos ID 8 a
     }
   });
 
-  // =========================================================
-  // CASO INTEGRACIÓN 8: Registro Exitoso
-  // =========================================================
   it('ID 8 (Integración): Registrar horario exitosamente (Hoy+4días, Mañana, 07:00-13:00) y verificar en BD', async () => {
     const fechaValida = obtenerFechaRelativa(4);
 
@@ -127,9 +123,6 @@ describe('Pruebas de Integración: Módulo de Registro de Horarios (Casos ID 8 a
     expect(horarioEnBd?.turno).toBe('MAÑANA');
   });
 
-  // =========================================================
-  // CASO INTEGRACIÓN 9: Evaluación de Registro
-  // =========================================================
   it('ID 9 (Integración): Evaluar registro con datos de horario y verificar persistencia en BD', async () => {
     const fechaInvalida = obtenerFechaRelativa(2);
 
@@ -150,9 +143,6 @@ describe('Pruebas de Integración: Módulo de Registro de Horarios (Casos ID 8 a
     expect(horarioEnBd).not.toBeNull();
   });
 
-  // =========================================================
-  // CASO INTEGRACIÓN 10: Exceso de Capacidad por Rango
-  // =========================================================
   it('ID 10 (Integración): Rechazar si la cantidad de pacientes sobrepasa el turno asignado', async () => {
     const fechaValida = obtenerFechaRelativa(4);
 
@@ -169,9 +159,6 @@ describe('Pruebas de Integración: Módulo de Registro de Horarios (Casos ID 8 a
     );
   });
 
-  // =========================================================
-  // CASO INTEGRACIÓN 11: Exceso de Capacidad para Turno Mañana
-  // =========================================================
   it('ID 11 (Integración): Rechazar si el tiempo total excede el límite del turno Mañana', async () => {
     const fechaValida = obtenerFechaRelativa(5);
 

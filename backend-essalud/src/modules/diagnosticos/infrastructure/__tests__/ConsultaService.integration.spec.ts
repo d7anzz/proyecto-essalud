@@ -57,69 +57,6 @@ describe('Pruebas de Integración: Módulo Consulta Médica (Casos ID 15 al 18)'
     const citaRepo = new MysqlCitaRepository(dataSource);
 
     consultaService = new ConsultaService(consultaRepo, citaRepo);
-
-    const usuarioRepo = dataSource.getRepository(UsuarioModel);
-    const personalRepo = dataSource.getRepository(PersonalModel);
-    const pacienteRepo = dataSource.getRepository(PacienteModel);
-    const medicamentoRepo = dataSource.getRepository(MedicamentoModel);
-
-    let usuarioExistente = await usuarioRepo.findOneBy({ dni: DNI_MEDICO_PRUEBA });
-    if (!usuarioExistente) {
-      await usuarioRepo.save({
-        dni: DNI_MEDICO_PRUEBA,
-        username: 'medico_consulta_test',
-        passwordHash: '$2a$10$hashdeprueba',
-        password_hash: '$2a$10$hashdeprueba',
-        password: '$2a$10$hashdeprueba',
-        idRol: ROL_MEDICO,
-        intentosFallidos: 0,
-        primerAcceso: false,
-        activo: true
-      } as any);
-    }
-
-    let personalExistente = await personalRepo.findOneBy({ dni: DNI_MEDICO_PRUEBA });
-    if (!personalExistente) {
-      await personalRepo.save({
-        dni: DNI_MEDICO_PRUEBA,
-        nombre: 'Carlos',
-        apellidos: 'Mendoza',
-        fec_nac: '1985-05-15',
-        fecNac: '1985-05-15',
-        fechaNacimiento: '1985-05-15',
-        colegiatura: '54321',
-        telefono: '987654321',
-        idEspecialidad: 1,
-        id_especialidad: 1
-      } as any);
-    }
-
-    let pacienteExistente = await pacienteRepo.findOneBy({ dni: DNI_PACIENTE_PRUEBA });
-    if (!pacienteExistente) {
-      await pacienteRepo.save({
-        dni: DNI_PACIENTE_PRUEBA,
-        nombre: 'Juan',
-        apellidos: 'Pérez',
-        fechaNacimiento: '1990-05-15',
-        sexo: 'M',
-        telefono: '987654321',
-        tipoSeguro: 'TITULAR',
-        grupoSanguineo: 'O+'
-      } as any);
-    }
-
-    let medicamentoExistente = await medicamentoRepo.findOneBy({ idMedicamento: ID_MEDICAMENTO_PARACETAMOL });
-    if (!medicamentoExistente) {
-      await medicamentoRepo.save({
-        idMedicamento: ID_MEDICAMENTO_PARACETAMOL,
-        nombre: 'Paracetamol 500mg',
-        nombreMedicamento: 'Paracetamol 500mg',
-        nombre_medicamento: 'Paracetamol 500mg',
-        fechaVencimiento: '2028-12-31',
-        fecha_vencimiento: '2028-12-31',
-        stock: 500
-      } as any);
-    }
   });
 
   afterAll(async () => {
@@ -144,11 +81,73 @@ describe('Pruebas de Integración: Módulo Consulta Médica (Casos ID 15 al 18)'
       const consultaRepo = dataSource.getRepository(ConsultaModel);
       const citaRepo = dataSource.getRepository(CitaModel);
       const horarioRepo = dataSource.getRepository(HorarioModel);
+      const usuarioRepo = dataSource.getRepository(UsuarioModel);
+      const personalRepo = dataSource.getRepository(PersonalModel);
+      const pacienteRepo = dataSource.getRepository(PacienteModel);
+      const medicamentoRepo = dataSource.getRepository(MedicamentoModel);
 
       await ordenRepo.delete({ idConsulta: MoreThan(0) });
       await consultaRepo.delete({ idConsulta: MoreThan(0) });
       await citaRepo.delete({ dniPaciente: DNI_PACIENTE_PRUEBA });
       await horarioRepo.delete({ dni: DNI_MEDICO_PRUEBA });
+
+      let usuarioExistente = await usuarioRepo.findOneBy({ dni: DNI_MEDICO_PRUEBA });
+      if (!usuarioExistente) {
+        await usuarioRepo.save({
+          dni: DNI_MEDICO_PRUEBA,
+          username: 'medico_consulta_test',
+          passwordHash: '$2a$10$hashdeprueba',
+          password_hash: '$2a$10$hashdeprueba',
+          password: '$2a$10$hashdeprueba',
+          idRol: ROL_MEDICO,
+          intentosFallidos: 0,
+          primerAcceso: false,
+          activo: true
+        } as any);
+      }
+
+      let personalExistente = await personalRepo.findOneBy({ dni: DNI_MEDICO_PRUEBA });
+      if (!personalExistente) {
+        await personalRepo.save({
+          dni: DNI_MEDICO_PRUEBA,
+          nombre: 'Carlos',
+          apellidos: 'Mendoza',
+          fec_nac: '1985-05-15',
+          fecNac: '1985-05-15',
+          fechaNacimiento: '1985-05-15',
+          colegiatura: '54321',
+          telefono: '987654321',
+          idEspecialidad: 1,
+          id_especialidad: 1
+        } as any);
+      }
+
+      let pacienteExistente = await pacienteRepo.findOneBy({ dni: DNI_PACIENTE_PRUEBA });
+      if (!pacienteExistente) {
+        await pacienteRepo.save({
+          dni: DNI_PACIENTE_PRUEBA,
+          nombre: 'Juan',
+          apellidos: 'Pérez',
+          fechaNacimiento: '1990-05-15',
+          sexo: 'M',
+          telefono: '987654321',
+          tipoSeguro: 'TITULAR',
+          grupoSanguineo: 'O+'
+        } as any);
+      }
+
+      let medicamentoExistente = await medicamentoRepo.findOneBy({ idMedicamento: ID_MEDICAMENTO_PARACETAMOL });
+      if (!medicamentoExistente) {
+        await medicamentoRepo.save({
+          idMedicamento: ID_MEDICAMENTO_PARACETAMOL,
+          nombre: 'Paracetamol 500mg',
+          nombreMedicamento: 'Paracetamol 500mg',
+          nombre_medicamento: 'Paracetamol 500mg',
+          fechaVencimiento: '2028-12-31',
+          fecha_vencimiento: '2028-12-31',
+          stock: 500
+        } as any);
+      }
 
       const horario1 = await horarioRepo.save({
         dni: DNI_MEDICO_PRUEBA,

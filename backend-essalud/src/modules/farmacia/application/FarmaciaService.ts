@@ -17,7 +17,6 @@ export class FarmaciaService {
       throw new Error('Acceso denegado: Solo el personal de Farmacia (Rol 3) está autorizado para gestionar el inventario.');
     }
 
-    // Instanciamos el modelo de dominio para ejecutar sus validaciones automáticas de negocio
     const nuevoMedicamento = new Medicamento(
       0,
       dto.nombreMedicamento,
@@ -39,8 +38,12 @@ export class FarmaciaService {
       throw new Error('Acceso denegado: Solo el personal de Farmacia (Rol 3) está autorizado para entregar medicamentos.');
     }
 
-    if (!dto.idOrden || !dto.idMedicamento || dto.cantidadEntregada <= 0) {
-      throw new Error('Validación: Los datos de la orden y la cantidad a entregar deben ser válidos.');
+    if (!dto.idOrden || !dto.idMedicamento) {
+      throw new Error('Validación: Los datos de la orden y el medicamento son obligatorios.');
+    }
+
+    if (dto.cantidadEntregada <= 0) {
+      throw new Error('La cantidad debe ser mayor a 0');
     }
 
     await this.repo.despacharRecetaTransaccional(dto.idOrden, dto.idMedicamento, dto.cantidadEntregada);
