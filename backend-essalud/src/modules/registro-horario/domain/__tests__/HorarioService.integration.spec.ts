@@ -3,12 +3,14 @@ import { MysqlHorarioRepository } from '../../infrastructure/MysqlHorarioReposit
 import { HorarioModel } from '../../infrastructure/HorarioModel';
 import { PersonalModel, EspecialidadInline } from '../../../registropersonal/infrastructure/PersonalModel';
 import { UsuarioModel } from '../../../login/infrastructure/UsuarioModel';
+import { CitaModel } from '../../../citas/infrastructure/CitaModel';
+import { PacienteModel } from '../../../pacientes/infrastructure/PacienteModel'; // 👈 Se importa PacienteModel
 import { HorarioService } from '../../application/HorarioService';
 import { CrearHorarioDTO } from '../../application/CrearHorarioDTO';
 import dotenv from 'dotenv';
 import path from 'path';
 
-dotenv.config({ path: path.resolve(__dirname, '../../../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../../../.env'), quiet: true });
 
 describe('Pruebas de Integración: Módulo de Registro de Horarios (Casos ID 8 al 11)', () => {
   let dataSource: DataSource;
@@ -24,6 +26,16 @@ describe('Pruebas de Integración: Módulo de Registro de Horarios (Casos ID 8 a
     return fecha.toISOString().split('T')[0]!;
   };
 
+  const limpiarTablas = async () => {
+    if (dataSource && dataSource.isInitialized) {
+      const citaRepo = dataSource.getRepository(CitaModel);
+      const horarioRepo = dataSource.getRepository(HorarioModel);
+
+      await citaRepo.delete({ idMedico: DNI_MEDICO_PRUEBA });
+      await horarioRepo.delete({ dni: DNI_MEDICO_PRUEBA });
+    }
+  };
+
   beforeAll(async () => {
     dataSource = new DataSource({
       type: 'mysql',
@@ -32,7 +44,8 @@ describe('Pruebas de Integración: Módulo de Registro de Horarios (Casos ID 8 a
       username: process.env.DB_USER || 'root',
       password: process.env.DB_PASSWORD || 'Darikson1905@',
       database: process.env.DB_NAME || 'essalud_db',
-      entities: [HorarioModel, PersonalModel, UsuarioModel, EspecialidadInline],
+      // 👈 Se agrega PacienteModel en la lista de entidades
+      entities: [HorarioModel, PersonalModel, UsuarioModel, EspecialidadInline, CitaModel, PacienteModel],
       synchronize: false,
       logging: false,
     });
@@ -45,58 +58,51 @@ describe('Pruebas de Integración: Módulo de Registro de Horarios (Casos ID 8 a
 
   afterAll(async () => {
     if (dataSource && dataSource.isInitialized) {
-      const horarioRepo = dataSource.getRepository(HorarioModel);
-      await horarioRepo.delete({ dni: DNI_MEDICO_PRUEBA });
+      await limpiarTablas();
       await dataSource.destroy();
     }
   });
 
   beforeEach(async () => {
-    if (dataSource && dataSource.isInitialized) {
-      const horarioRepo = dataSource.getRepository(HorarioModel);
-      const usuarioRepo = dataSource.getRepository(UsuarioModel);
-      const personalRepo = dataSource.getRepository(PersonalModel);
+    await limpiarTablas();
 
-      await horarioRepo.delete({ dni: DNI_MEDICO_PRUEBA });
+    const usuarioRepo = dataSource.getRepository(UsuarioModel);
+    const personalRepo = dataSource.getRepository(PersonalModel);
 
-      let usuarioExistente = await usuarioRepo.findOneBy({ dni: DNI_MEDICO_PRUEBA });
-      if (!usuarioExistente) {
-        await usuarioRepo.save({
-          dni: DNI_MEDICO_PRUEBA,
-          username: 'medico_test',
-          passwordHash: '$2a$10$hashdeprueba',
-          password_hash: '$2a$10$hashdeprueba',
-          password: '$2a$10$hashdeprueba',
-          idRol: ROL_MEDICO,
-          intentosFallidos: 0,
-          primerAcceso: false,
-          activo: true
-        } as any);
-      }
+    let usuarioExistente = await usuarioRepo.findOneBy({ dni: DNI_MEDICO_PRUEBA });
+    if (!usuarioExistente) {
+      await usuarioRepo.save({
+        dni: DNI_MEDICO_PRUEBA,
+        username: 'medico_horarios_test',
+        passwordHash: '$2a$10$hashdeprueba',
+        password_hash: '$2a$10$hashdeprueba',
+        password: '$2a$10$hashdeprueba',
+        idRol: ROL_MEDICO,
+        intentosFallidos: 0,
+        primerAcceso: false,
+        activo: true
+      } as any);
+    }
 
-      let personalExistente = await personalRepo.findOneBy({ dni: DNI_MEDICO_PRUEBA });
-      if (!personalExistente) {
-        await personalRepo.save({
-          dni: DNI_MEDICO_PRUEBA,
-          nombre: 'Medico',
-          apellidos: 'Prueba',
-          fec_nac: '1985-05-15',
-          fecNac: '1985-05-15',
-          fechaNacimiento: '1985-05-15',
-          colegiatura: '12345',
-          telefono: '987654321',
-          idEspecialidad: 1,
-          id_especialidad: 1
-        } as any);
-      }
+    let personalExistente = await personalRepo.findOneBy({ dni: DNI_MEDICO_PRUEBA });
+    if (!personalExistente) {
+      await personalRepo.save({
+        dni: DNI_MEDICO_PRUEBA,
+        nombre: 'Medico',
+        apellidos: 'Prueba',
+        fec_nac: '1985-05-15',
+        fecNac: '1985-05-15',
+        fechaNacimiento: '1985-05-15',
+        colegiatura: '12345',
+        telefono: '987654321',
+        idEspecialidad: 1,
+        id_especialidad: 1
+      } as any);
     }
   });
 
   afterEach(async () => {
-    if (dataSource && dataSource.isInitialized) {
-      const horarioRepo = dataSource.getRepository(HorarioModel);
-      await horarioRepo.delete({ dni: DNI_MEDICO_PRUEBA });
-    }
+    await limpiarTablas();
   });
 
   it('ID 8 (Integración): Registrar horario exitosamente (Hoy+4días, Mañana, 07:00-13:00) y verificar en BD', async () => {
@@ -124,11 +130,11 @@ describe('Pruebas de Integración: Módulo de Registro de Horarios (Casos ID 8 a
   });
 
   it('ID 9 (Integración): Evaluar registro con datos de horario y verificar persistencia en BD', async () => {
-    const fechaInvalida = obtenerFechaRelativa(2);
+    const fechaValida = obtenerFechaRelativa(4);
 
     const dto: CrearHorarioDTO = {
       dni: DNI_MEDICO_PRUEBA,
-      fecha: fechaInvalida,
+      fecha: fechaValida,
       turno: 'MAÑANA',
       horaInicio: '07:00',
       cantidadPacientes: 1
@@ -138,7 +144,7 @@ describe('Pruebas de Integración: Módulo de Registro de Horarios (Casos ID 8 a
     expect(resultado).not.toBeNull();
 
     const horarioEnBd = await dataSource.getRepository(HorarioModel).findOne({
-      where: { dni: DNI_MEDICO_PRUEBA, fecha: fechaInvalida }
+      where: { dni: DNI_MEDICO_PRUEBA, fecha: fechaValida }
     });
     expect(horarioEnBd).not.toBeNull();
   });

@@ -9,7 +9,10 @@ export class FarmaciaService {
   constructor(private readonly repo: FarmaciaRepository) {}
 
   async obtenerInventario(rolEjecutor: number): Promise<Medicamento[]> {
-    return await this.repo.listarInventario();
+    if (rolEjecutor !== this.ROL_FARMACEUTICO) {
+      throw new Error('Acceso denegado: No tiene permisos de lectura sobre el inventario.');
+    }
+    return this.repo.listarInventario();
   }
 
   async registrarMedicamento(dto: IngresarMedicamentoDTO, rolEjecutor: number): Promise<Medicamento> {
