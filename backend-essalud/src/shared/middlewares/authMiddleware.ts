@@ -34,7 +34,6 @@ export const verificarJWT = (req: Request, res: Response, next: NextFunction): v
         const payloadDecodificado = jwt.verify(token, claveSecreta);
         
         console.log('[AuthMiddleware] Token verificado con éxito.');
-        console.log('Datos decodificados dentro del JWT:', payloadDecodificado);
 
         (req as any).user = payloadDecodificado;
 

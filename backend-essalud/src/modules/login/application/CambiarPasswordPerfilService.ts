@@ -28,7 +28,5 @@ export class CambiarPasswordPerfilService {
 
         // 5. PERSISTENCIA REAL: Sincronizamos la entidad de dominio mutada con la base de datos
         await this.authRepository.actualizarEstado(usuario);
-        
-        console.log(`✅ Contraseña guardada con éxito en MySQL mediante Repositorio de Dominio para DNI: ${dto.dni}`);
     }
 }
