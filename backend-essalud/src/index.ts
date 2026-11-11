@@ -20,9 +20,8 @@ import { verificarJWT } from './shared/middlewares/authMiddleware';
 const app = express();
 app.disable('x-powered-by'); // Soluciona la advertencia de versión expuesta de Express
 
-// Opcional: Si SonarQube te sigue marcando cors(), puedes pasarle un objeto de configuración básico
 app.use(cors({
-  origin: '*', // O restringe a tu frontend si lo prefieres
+  origin: 'http://localhost:4200',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
