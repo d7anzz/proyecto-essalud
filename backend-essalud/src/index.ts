@@ -18,6 +18,7 @@ import { configurarRutasHistorias } from './modules/historias/presentation/Histo
 import { verificarJWT } from './shared/middlewares/authMiddleware';
 
 const app = express();
+app.disable('x-powered-by');
 
 app.use(cors());
 app.use(express.json()); 
@@ -63,4 +64,4 @@ async function iniciarSistema() {
   }
 }
 
-iniciarSistema();
+await iniciarSistema();

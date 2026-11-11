@@ -18,11 +18,10 @@ export class DatabaseSingleton {
       host: '127.0.0.1',
       port: 3306,
       username: 'root',
-      password: 'Darikson1905@', 
+      password: '', 
       database: 'essalud_db',
       synchronize: false, 
       logging: false,
-      // 🚀 REGISTRAMOS LOS NUEVOS COMPONENTES DE INFRAESTRUCTURA AQUÍ:
       entities: [
         PacienteModel, 
         UsuarioModel, 
