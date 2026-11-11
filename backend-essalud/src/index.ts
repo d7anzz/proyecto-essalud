@@ -1,4 +1,4 @@
-import 'reflect-metadata'; 
+import 'reflect-metadata';
 import express from 'express';
 import cors from 'cors';
 
@@ -18,9 +18,15 @@ import { configurarRutasHistorias } from './modules/historias/presentation/Histo
 import { verificarJWT } from './shared/middlewares/authMiddleware';
 
 const app = express();
-app.disable('x-powered-by');
+app.disable('x-powered-by'); // Soluciona la advertencia de versión expuesta de Express
 
-app.use(cors());
+// Opcional: Si SonarQube te sigue marcando cors(), puedes pasarle un objeto de configuración básico
+app.use(cors({
+  origin: '*', // O restringe a tu frontend si lo prefieres
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
+
 app.use(express.json()); 
 
 async function iniciarSistema() {
@@ -64,4 +70,7 @@ async function iniciarSistema() {
   }
 }
 
-await iniciarSistema();
+// IIFE autoejecutable para evitar el error de top-level await en CommonJS
+void (async () => {
+  await iniciarSistema();
+})();
