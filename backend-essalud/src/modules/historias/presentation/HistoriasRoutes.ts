@@ -12,8 +12,8 @@ export const configurarRutasHistorias = (dataSource: DataSource): Router => {
   const historiasService = new HistoriasService(historiasRepository);
   const historiasController = new HistoriasController(historiasService);
 
-  router.get('/:dniPaciente', (req, res) => {
-    historiasController.obtenerHistoriaPorDni(req, res);
+  router.get('/:dniPaciente', async (req, res) => {
+    await historiasController.obtenerHistoriaPorDni(req, res);
   });
 
   return router;

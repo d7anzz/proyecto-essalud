@@ -45,6 +45,7 @@
     <div class="control-bar">
       <div class="buscador-dni">
         <input
+          id="buscarPorDNI"
           type="text"
           placeholder="Buscar paciente por DNI..."
           [(ngModel)]="dniBusqueda"
@@ -167,29 +168,29 @@
 
       <form (ngSubmit)="guardarMedicamento()" class="modal-form">
         <div class="form-group">
-          <label>Nombre del Medicamento:</label>
-          <input type="text" [(ngModel)]="formMedicamento.nombreMedicamento" name="nombre" required placeholder="Ej. Paracetamol 500mg" />
+          <label for = "nombredeMedicamento">Nombre del Medicamento:</label>
+          <input id="nombredeMedicamento" type="text" [(ngModel)]="formMedicamento.nombreMedicamento" name="nombre" required placeholder="Ej. Paracetamol 500mg" />
         </div>
 
         <div class="form-group">
-          <label>Composición Química / Descripción:</label>
-          <textarea [(ngModel)]="formMedicamento.composicion" name="composicion" required placeholder="Ej. Cada tableta contiene Paracetamol pura..."></textarea>
+          <label for = "ComposicionQuimica">Composición Química / Descripción:</label>
+          <textarea id="ComposicionQuimica" [(ngModel)]="formMedicamento.composicion" name="composicion" required placeholder="Ej. Cada tableta contiene Paracetamol pura..."></textarea>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label>Cantidad de Ingreso (Unidades):</label>
-            <input type="number" [(ngModel)]="formMedicamento.cantidadIngreso" name="cantidad" min="1" required />
+            <label for = "CantidadIngresada">Cantidad de Ingreso (Unidades):</label>
+            <input id="CantidadIngresada" type="number" [(ngModel)]="formMedicamento.cantidadIngreso" name="cantidad" min="1" required />
           </div>
           <div class="form-group">
-            <label>Stock de Alerta Mínimo:</label>
-            <input type="number" [(ngModel)]="formMedicamento.stockMinimo" name="minimo" min="0" required />
+            <label for = "StockAlerta">Stock de Alerta Mínimo:</label>
+            <input id="StockAlerta" type="number" [(ngModel)]="formMedicamento.stockMinimo" name="minimo" min="0" required />
           </div>
         </div>
 
         <div class="form-group">
-          <label>Fecha de Vencimiento:</label>
-          <input type="date" [min]="fechaMinimaParaIngreso" [(ngModel)]="formMedicamento.fechaVencimiento" name="vencimiento" required />
+          <label for = "FecVen">Fecha de Vencimiento:</label>
+          <input id = "FecVen" type="date" [min]="fechaMinimaParaIngreso" [(ngModel)]="formMedicamento.fechaVencimiento" name="vencimiento" required />
         </div>
 
         <div class="modal-actions">
