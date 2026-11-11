@@ -120,8 +120,9 @@
 
     <div class="form-container">
       <div class="form-group posicion-relativa">
-        <label>Buscar Paciente por DNI</label>
+        <label for="buscarPaciente">Buscar Paciente por DNI</label>
         <input
+          id="buscarPaciente"
           type="text"
           [value]="pacienteSeleccionadoTexto"
           (input)="buscarPacientePorDni($event)"
@@ -137,8 +138,8 @@
       </div>
 
       <div class="form-group">
-        <label>1. Especialidad Médica</label>
-        <select [(ngModel)]="form.especialidad" (change)="alCambiarEspecialidad()" [disabled]="!form.dniPaciente">
+        <label for="selectEspecialidad">1. Especialidad Médica</label>
+        <select id="selectEspecialidad" [(ngModel)]="form.especialidad" (change)="alCambiarEspecialidad()" [disabled]="!form.dniPaciente">
           <option value="" disabled selected>-- Seleccione Especialidad --</option>
           @for (esp of especialidades; track esp) {
             <option [value]="esp">{{ esp }}</option>
@@ -147,8 +148,8 @@
       </div>
 
       <div class="form-group">
-        <label>2. Médico Especialista</label>
-        <select [(ngModel)]="form.dniMedico" (change)="alCambiarMedico()" [disabled]="!form.especialidad || medicosFiltrados.length === 0">
+        <label for="selectMedico">2. Médico Especialista</label>
+        <select id="selectMedico" [(ngModel)]="form.dniMedico" (change)="alCambiarMedico()" [disabled]="!form.especialidad || medicosFiltrados.length === 0">
           <option value="" disabled selected>-- Seleccione Médico --</option>
           @for (m of medicosFiltrados; track m.dni) {
             <option [value]="m.dni">{{ m.nombre }}</option>
@@ -157,8 +158,8 @@
       </div>
 
       <div class="form-group">
-        <label>3. Fecha de Consulta</label>
-        <select [(ngModel)]="form.fecha" (change)="alCambiarFecha()" [disabled]="!form.dniMedico || fechasFiltradas.length === 0">
+        <label for="selectFecha">3. Fecha de Consulta</label>
+        <select id="selectFecha" [(ngModel)]="form.fecha" (change)="alCambiarFecha()" [disabled]="!form.dniMedico || fechasFiltradas.length === 0">
           <option value="" disabled selected>-- Seleccione una Fecha --</option>
           @for (fecha of fechasFiltradas; track fecha) {
             <option [value]="fecha">📅 {{ fecha }}</option>
@@ -167,8 +168,8 @@
       </div>
 
       <div class="form-group">
-        <label>4. Horas Disponibles</label>
-        <select [(ngModel)]="form.idHorario" [disabled]="!form.fecha || horariosFinales.length === 0">
+        <label for="selectHorario">4. Horas Disponibles</label>
+        <select id="selectHorario" [(ngModel)]="form.idHorario" [disabled]="!form.fecha || horariosFinales.length === 0">
           <option value="" disabled selected>-- Seleccione la Hora --</option>
           @for (h of horariosFinales; track h.id) {
             <option [value]="h.id">

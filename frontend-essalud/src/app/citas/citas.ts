@@ -228,7 +228,8 @@ export class GestionCitasComponent implements OnInit {
       }
     });
 
-    this.fechasFiltradas = Array.from(fechasSet).sort();
+    // 🚀 Corregido con localeCompare para evitar la advertencia de SonarQube
+    this.fechasFiltradas = Array.from(fechasSet).sort((a, b) => a.localeCompare(b));
     this.cdr.detectChanges();
   }
 
