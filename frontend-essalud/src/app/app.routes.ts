@@ -22,27 +22,28 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardLayoutComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard], // Valida que esté logueado al entrar al dashboard
     children: [
       { path: 'inicio', component: InicioComponent },
 
-      { path: 'pacientes', component: PacienteComponent, data: { roles: [1, 2, 4] } },
+      // ¡Aquí está el cambio! Añadimos canActivate en cada hijo que requiera restricción de rol:
+      { path: 'pacientes', component: PacienteComponent, canActivate: [authGuard], data: { roles: [1, 2, 4] } },
 
-      { path: 'citas', component: GestionCitasComponent, data: { roles: [1, 2, 4] } },
+      { path: 'citas', component: GestionCitasComponent, canActivate: [authGuard], data: { roles: [1, 2, 4] } },
 
-      { path: 'diagnosticos', component: DiagnosticosComponent, data: { roles: [1, 4] } },
+      { path: 'diagnosticos', component: DiagnosticosComponent, canActivate: [authGuard], data: { roles: [1, 4] } },
 
-      { path: 'farmacia', component: FarmaciaComponent, data: { roles: [3, 4] } },
+      { path: 'farmacia', component: FarmaciaComponent, canActivate: [authGuard], data: { roles: [3, 4] } },
 
-      { path: 'registro', component: RegistroComponent, data: { roles: [2, 4] } },
+      { path: 'registro', component: RegistroComponent, canActivate: [authGuard], data: { roles: [2, 4] } },
 
-      { path: 'horarios', component: RegistroHorarioComponent, data: { roles: [1] } },
+      { path: 'horarios', component: RegistroHorarioComponent, canActivate: [authGuard], data: { roles: [1, 2, 4] } },
 
-      { path: 'reportes', component: ReportesComponent, data: { roles: [2, 4] } },
+      { path: 'reportes', component: ReportesComponent, canActivate: [authGuard], data: { roles: [2, 4] } },
 
-      { path: 'historias', component: HistoriasComponent, data: { roles: [1, 2, 4] } },
+      { path: 'historias', component: HistoriasComponent, canActivate: [authGuard], data: { roles: [1, 2, 4] } },
 
-      { path: 'perfil', component: PerfilComponent },
+      { path: 'perfil', component: PerfilComponent }, // El perfil es libre para cualquier usuario logueado
 
       { path: '', redirectTo: 'inicio', pathMatch: 'full' }
     ],
