@@ -1,1 +1,29 @@
-/* You can add global styles to this file, and also import other style files */
+/* --- Estilos Globales de Accesibilidad (ODS 10) --- */
+
+body.acc-alto-contraste,
+body.acc-alto-contraste * {
+  background-color: #000000 !important;
+  color: #ffff00 !important;
+  border-color: #ffff00 !important;
+}
+
+body.acc-alto-contraste button,
+body.acc-alto-contraste a {
+  background-color: #ffff00 !important;
+  color: #000000 !important;
+  font-weight: bold !important;
+}
+
+html:has(body.acc-invertir-color) {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Filtro de Daltonismo optimizado mediante matriz de color SVG */
+html:has(body.acc-daltonismo) {
+  filter: url('#daltonism-filter');
+}
+
+:focus-visible {
+  outline: 3px solid #0077C8 !important;
+  outline-offset: 2px !important;
+}

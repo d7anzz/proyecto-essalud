@@ -1,0 +1,121 @@
+.acc-widget {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  font-family: inherit;
+}
+
+.acc-fab {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background-color: #0077C8;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  font-size: 26px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.acc-fab:hover {
+  transform: scale(1.08);
+}
+
+.acc-panel {
+  position: absolute;
+  bottom: 66px;
+  right: 0;
+  width: 270px;
+  background: #ffffff;
+  border: 1px solid #d0d7de;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  color: #1f2328;
+}
+
+.acc-header {
+  background: #0077C8;
+  color: #ffffff;
+  padding: 12px 14px;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.acc-close {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.acc-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.acc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  padding: 4px 0;
+}
+
+.acc-btn-group {
+  display: flex;
+  gap: 6px;
+}
+
+.acc-btn-group button {
+  padding: 4px 10px;
+  border: 1px solid #0077C8;
+  background: #f0f7ff;
+  color: #0077C8;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.acc-option {
+  width: 100%;
+  text-align: left;
+  padding: 9px 12px;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  background: #f6f8fa;
+  color: #1f2328;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.acc-option.active {
+  background: #0077C8;
+  color: #ffffff;
+  border-color: #0077C8;
+}
+
+.acc-reset {
+  margin-top: 4px;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  background: #eaeef2;
+  color: #57606a;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
