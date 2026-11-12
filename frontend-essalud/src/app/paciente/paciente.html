@@ -8,6 +8,7 @@
   <div class="search-bar">
     <input
       type="text"
+      aria-label="Filtrar por Nombre o Apellido"
       placeholder="🔍 Filtrar por Nombre o Apellido..."
       [ngModel]="filtroNombre()"
       (ngModelChange)="filtroNombre.set($event)"
@@ -15,6 +16,7 @@
 
     <input
       type="text"
+      aria-label="Filtrar por DNI"
       placeholder="💳 Filtrar por DNI..."
       maxlength="8"
       [ngModel]="filtroDni()"
@@ -103,8 +105,9 @@
 
       <form [formGroup]="pacienteForm" (ngSubmit)="onGuardarPaciente()">
         <div class="form-group">
-          <label>DNI del Paciente *</label>
+          <label for="pacienteDni">DNI del Paciente *</label>
           <input
+            id="pacienteDni"
             type="text"
             formControlName="dni"
             maxlength="8"
@@ -113,8 +116,9 @@
         </div>
 
         <div class="form-group">
-          <label>Nombres *</label>
+          <label for="pacienteNombre">Nombres *</label>
           <input
+            id="pacienteNombre"
             type="text"
             formControlName="nombre"
             placeholder="Ej. Juan Carlos"
@@ -122,8 +126,9 @@
         </div>
 
         <div class="form-group">
-          <label>Apellidos *</label>
+          <label for="pacienteApellidos">Apellidos *</label>
           <input
+            id="pacienteApellidos"
             type="text"
             formControlName="apellidos"
             placeholder="Ej. Pérez Gómez"
@@ -132,16 +137,17 @@
 
         <div class="form-row">
           <div class="form-group half">
-            <label>Fecha de Nacimiento *</label>
+            <label for="pacienteFecNac">Fecha de Nacimiento *</label>
             <input
+              id="pacienteFecNac"
               type="date"
               formControlName="fec_nac"
             >
           </div>
 
           <div class="form-group half">
-            <label>Sexo *</label>
-            <select formControlName="sexo" class="select-input">
+            <label for="pacienteSexo">Sexo *</label>
+            <select id="pacienteSexo" formControlName="sexo" class="select-input">
               <option value="">Seleccione</option>
               <option value="M">Masculino (M)</option>
               <option value="F">Femenino (F)</option>
@@ -151,8 +157,9 @@
 
         <div class="form-row">
           <div class="form-group half">
-            <label>Teléfono / Celular*</label>
+            <label for="pacienteTelefono">Teléfono / Celular*</label>
             <input
+              id="pacienteTelefono"
               type="text"
               formControlName="telefono"
               maxlength="9"
@@ -164,8 +171,8 @@
           </div>
 
           <div class="form-group half">
-            <label>Tipo de Seguro *</label>
-            <select formControlName="tipo_seguro" class="select-input">
+            <label for="pacienteTipoSeguro">Tipo de Seguro *</label>
+            <select id="pacienteTipoSeguro" formControlName="tipo_seguro" class="select-input">
               <option value="TITULAR">TITULAR</option>
               <option value="DERECHOHABIENTE">DERECHOHABIENTE</option>
               <option value="PENSIONISTA">PENSIONISTA</option>
@@ -174,8 +181,8 @@
         </div>
 
         <div class="form-group">
-          <label>Grupo Sanguíneo</label>
-          <select formControlName="grupo_sanguineo" class="select-input">
+          <label for="pacienteGrupoSanguineo">Grupo Sanguíneo</label>
+          <select id="pacienteGrupoSanguineo" formControlName="grupo_sanguineo" class="select-input">
             <option value="">Desconocido</option>
             <option value="O+">O+</option>
             <option value="O-">O-</option>

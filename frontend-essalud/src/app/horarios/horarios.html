@@ -76,20 +76,21 @@
 
     <div class="form-grid">
       <div class="form-group full-width">
-        <label>Turno Institucional</label>
-        <select [(ngModel)]="form.turno" (change)="onTurnoChange()">
+        <label for="turnoInstitucional">Turno Institucional</label>
+        <select id="turnoInstitucional" [(ngModel)]="form.turno" (change)="onTurnoChange()">
           <option *ngFor="let t of turnosOpciones" [value]="t">{{ t }}</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label>Hora Inicio del Turno</label>
-        <input type="time" [(ngModel)]="form.horaInicio" />
+        <label for="horaInicioTurno">Hora Inicio del Turno</label>
+        <input id="horaInicioTurno" type="time" [(ngModel)]="form.horaInicio" />
       </div>
 
       <div class="form-group">
-        <label>Cantidad de Pacientes</label>
+        <label for="cantidadPacientesCupos">Cantidad de Pacientes</label>
         <input
+          id="cantidadPacientesCupos"
           type="number"
           [(ngModel)]="form.cantidadPacientes"
           min="1"

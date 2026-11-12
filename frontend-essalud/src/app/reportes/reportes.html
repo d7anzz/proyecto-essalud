@@ -109,8 +109,8 @@
 
   <div class="filtros-card">
     <div class="campo">
-      <label>Área / Rol</label>
-      <select [(ngModel)]="rolPersonal" (change)="onRolPersonalChange()">
+      <label for="rolPersonalSelect">Área / Rol</label>
+      <select id="rolPersonalSelect" [(ngModel)]="rolPersonal" (change)="onRolPersonalChange()">
         <option value="TODOS">Todos</option>
         <option value="MEDICO">Médico</option>
         <option value="ADMINISTRATIVO">Administrativo</option>
@@ -120,8 +120,8 @@
     </div>
 
     <div class="campo">
-      <label>Especialidad médica</label>
-      <select [(ngModel)]="idEspecialidadPersonal" [disabled]="rolPersonal !== 'MEDICO'">
+      <label for="especialidadPersonalSelect">Especialidad médica</label>
+      <select id="especialidadPersonalSelect" [(ngModel)]="idEspecialidadPersonal" [disabled]="rolPersonal !== 'MEDICO'">
         <option value="">Todas las especialidades</option>
         <option value="1">Cardiología</option>
         <option value="2">Pediatría</option>
@@ -201,18 +201,18 @@
 
   <div class="filtros-card">
     <div class="campo">
-      <label>Fecha inicio</label>
-      <input type="date" [(ngModel)]="fechaInicio">
+      <label for="fechaInicioCitas">Fecha inicio</label>
+      <input id="fechaInicioCitas" type="date" [(ngModel)]="fechaInicio">
     </div>
 
     <div class="campo">
-      <label>Fecha fin</label>
-      <input type="date" [(ngModel)]="fechaFin">
+      <label for="fechaFinCitas">Fecha fin</label>
+      <input id="fechaFinCitas" type="date" [(ngModel)]="fechaFin">
     </div>
 
     <div class="campo">
-      <label>Especialidad</label>
-      <select [(ngModel)]="idEspecialidad">
+      <label for="especialidadCitasSelect">Especialidad</label>
+      <select id="especialidadCitasSelect" [(ngModel)]="idEspecialidad">
         <option value="">Todas las especialidades</option>
         <option value="1">Cardiología</option>
         <option value="2">Pediatría</option>
@@ -223,8 +223,8 @@
     </div>
 
     <div class="campo">
-      <label>Estado de cita</label>
-      <select [(ngModel)]="estadoCita">
+      <label for="estadoCitaSelect">Estado de cita</label>
+      <select id="estadoCitaSelect" [(ngModel)]="estadoCita">
         <option value="TODAS">Todas</option>
         <option value="PENDIENTE">Pendientes</option>
         <option value="COMPLETADA">Completadas</option>
@@ -312,18 +312,18 @@
 
   <div class="filtros-card">
     <div class="campo">
-      <label>Fecha inicio</label>
-      <input type="date" [(ngModel)]="fechaInicioConsulta">
+      <label for="fechaInicioConsulta">Fecha inicio</label>
+      <input id="fechaInicioConsulta" type="date" [(ngModel)]="fechaInicioConsulta">
     </div>
 
     <div class="campo">
-      <label>Fecha fin</label>
-      <input type="date" [(ngModel)]="fechaFinConsulta">
+      <label for="fechaFinConsulta">Fecha fin</label>
+      <input id="fechaFinConsulta" type="date" [(ngModel)]="fechaFinConsulta">
     </div>
 
     <div class="campo">
-      <label>Especialidad</label>
-      <select [(ngModel)]="idEspecialidadConsulta">
+      <label for="especialidadConsultaSelect">Especialidad</label>
+      <select id="especialidadConsultaSelect" [(ngModel)]="idEspecialidadConsulta">
         <option value="">Todas las especialidades</option>
         <option value="1">Cardiología</option>
         <option value="2">Pediatría</option>
